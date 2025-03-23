@@ -35,3 +35,4 @@ function binary_search1(arr, target) {
   return -1
 }
 binary_search1()
+const a = 1

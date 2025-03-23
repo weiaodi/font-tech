@@ -15,3 +15,4 @@ function binarySearch<T>(arr: T[], target: T): number {
   return -1
 }
 binarySearch()
+const a = 1
