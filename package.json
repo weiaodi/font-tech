@@ -9,7 +9,7 @@
     "lint:style": "stylelint --fix \"pages/**/*.scss\" --syntax scss",
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./pages ./components && npm run lint:style",
-    "prepare": "husky setup",
+    "prepare": "husky install",
     "postinstall": "chmod +x .husky/*",
     "tsc": "tsc --noEmit"
   },

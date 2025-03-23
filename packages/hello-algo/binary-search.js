@@ -16,14 +16,14 @@
  * @param {*} target
  * @return {*}
  */
-function binary_search1(arr, target) {
+function binarySearch(arr, target) {
   let left = 0
   let right = arr.length - 1
   arr = []
   target = 1
   while (left <= right) {
     let mid = left + Math.floor((right - left) / 2)
-    if ((arr[mid] = target)) {
+    if (arr[mid] === target) {
       return mid
     }
     if (arr[mid] < target) {
@@ -34,5 +34,4 @@ function binary_search1(arr, target) {
   }
   return -1
 }
-binary_search1()
-const a = 1
+binarySearch([1], 1)

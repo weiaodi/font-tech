@@ -1,9 +1,9 @@
-function binarySearch<T>(arr: T[], target: T): number {
+function binarySearch1<T>(arr: T[], target: T): number {
   let left: number = 0
   let right: number = arr.length - 1
   while (left <= right) {
     const mid: number = left + Math.floor((right - left) / 2)
-    if ((arr[mid] = target)) {
+    if (arr[mid] === target) {
       return mid
     }
     if (arr[mid] < target) {
@@ -14,5 +14,4 @@ function binarySearch<T>(arr: T[], target: T): number {
   }
   return -1
 }
-binarySearch()
-const a = 1
+binarySearch1([1], 1)
