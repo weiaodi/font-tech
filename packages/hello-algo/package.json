@@ -1,6 +1,6 @@
 {
-  "name": "packages",
-  "version": "1.0.0",
+  "name": "hello-algo",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
