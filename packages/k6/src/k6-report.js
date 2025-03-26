@@ -1,5 +1,5 @@
-import { htmlReport } from '../bundle/htmlReport.js'
-import { textSummary } from '../bundle/textSummary.js'
+import { htmlReport } from '../bundle/htmlReport.js';
+import { textSummary } from '../bundle/textSummary.js';
 
 /**
  *
@@ -12,5 +12,5 @@ export function handleSummary(data) {
   return {
     'result.html': htmlReport(data),
     stdout: textSummary(data, { indent: ' ', enableColors: true }),
-  }
+  };
 }

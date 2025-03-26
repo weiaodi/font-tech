@@ -1,4 +1,4 @@
-# hello-algo
+# algo
 
 ## 2.0.0
 

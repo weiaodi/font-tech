@@ -17,21 +17,21 @@
  * @return {*}
  */
 function binarySearch(arr, target) {
-  let left = 0
-  let right = arr.length - 1
-  arr = []
-  target = 1
+  let left = 0;
+  let right = arr.length - 1;
+  arr = [];
+  target = 1;
   while (left <= right) {
-    let mid = left + Math.floor((right - left) / 2)
+    let mid = left + Math.floor((right - left) / 2);
     if (arr[mid] === target) {
-      return mid
+      return mid;
     }
     if (arr[mid] < target) {
-      left = mid + 1
+      left = mid + 1;
     } else {
-      right = mid - 1
+      right = mid - 1;
     }
   }
-  return -1
+  return -1;
 }
-binarySearch([1], 1)
+binarySearch([1], 1);

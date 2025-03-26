@@ -11,6 +11,7 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
+    semi: ['error', 'always'],
     'prettier/prettier': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-console': 'off',
@@ -100,4 +101,4 @@ module.exports = {
       },
     },
   ],
-}
+};
