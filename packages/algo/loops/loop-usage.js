@@ -1,3 +1,13 @@
+/*
+ * @Author: weiaodi 1635654853@qq.com
+ * @Date: 2025-03-26 11:28:54
+ * @LastEditors: weiaodi 1635654853@qq.com
+ * @LastEditTime: 2025-03-26 12:39:29
+ * @FilePath: /FontTech_monoRepo/packages/algo/loops/loop-usage.js
+ *
+ * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
+ */
+
 let table = {
   a: 10,
   b: true,
