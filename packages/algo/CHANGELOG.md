@@ -1,5 +1,11 @@
 # algo
 
+## 4.0.0
+
+### Major Changes
+
+- 添加tree的使用
+
 ## 3.0.0
 
 ### Major Changes

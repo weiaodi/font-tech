@@ -69,7 +69,6 @@ class BinaryTreeArr {
     return result;
   }
 }
-// 问题 存在过多的判空逻辑来确认数值是否合法,所有抽取判空的逻辑到公共函数中,避免多次进行意义不明的判空
 
 // 创建一个完全二叉树数组实例
 const treeArray = [1, 2, 3, 4, 5];
@@ -87,34 +86,37 @@ console.log('中序遍历结果:', inOrderResult);
 const postOrderResult = binaryTree.postOrder(0);
 console.log('后序遍历结果:', postOrderResult);
 // 补充
-// // 定义一个 person 对象，包含 name 和 age 属性
-// let person = {
-//   name: 'John',
-//   age: 25,
-// };
+function demo(params) {
+  // 定义一个 person 对象，包含 name 和 age 属性
+  let person = {
+    name: 'John',
+    age: 25,
+  };
 
-// function increaseAge(obj) {
-//   obj.age += 1;
-//   obj = { name: 'Jane', age: 22 };
-//   // 打印重新赋值之后的新对象信息
-//   console.log('在重新赋值变量之后，新的对象是：', obj);
-//   return obj;
-// }
+  function increaseAge(obj) {
+    obj.age += 1;
+    obj = { name: 'Jane', age: 22 };
+    // 打印重新赋值之后的新对象信息
+    console.log('在重新赋值变量之后，新的对象是：', obj);
+    return obj;
+  }
 
-// // 打印调用函数之前原始 person 对象的信息
-// console.log('在调用函数之前，原始的 person 对象是：', person);
-// let newPerson = increaseAge(person);
-// console.log('在调用函数之后，原始的 person 对象是：', person);
-// console.log('函数返回的新对象是：', newPerson);
+  // 打印调用函数之前原始 person 对象的信息
+  console.log('在调用函数之前，原始的 person 对象是：', person);
+  let newPerson = increaseAge(person);
+  console.log('在调用函数之后，原始的 person 对象是：', person);
+  console.log('函数返回的新对象是：', newPerson);
 
-// // 数组案例
-// function modifyArray(arr) {
-//   arr = [5, 6, 7];
-//   return arr;
-// }
+  // 数组案例
+  function modifyArray(arr) {
+    arr = [5, 6, 7];
+    return arr;
+  }
 
-// let myArray = [1, 2, 3];
-// let newArray = modifyArray(myArray);
-// // 表明本质上 js还是按照值传递
-// console.log(myArray); // 输出: [1, 2, 3]
-// console.log(newArray); // 输出: [5, 6, 7]
+  let myArray = [1, 2, 3];
+  let newArray = modifyArray(myArray);
+  // 表明本质上 js还是按照值传递
+  console.log(myArray); // 输出: [1, 2, 3]
+  console.log(newArray); // 输出: [5, 6, 7]
+}
+// demo();

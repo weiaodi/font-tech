@@ -63,22 +63,25 @@ export class BinaryTree {
 }
 
 // 示例用法
-const root = new TreeNode(1);
-root.left = new TreeNode(2);
-root.right = new TreeNode(3);
-root.left.left = new TreeNode(4);
-root.left.right = new TreeNode(5);
-/*
-        1
+const demo = () => {
+  const root = new TreeNode(1);
+  root.left = new TreeNode(2);
+  root.right = new TreeNode(3);
+  root.left.left = new TreeNode(4);
+  root.left.right = new TreeNode(5);
+  /*
+          1
+         / \
+        2   3
        / \
-      2   3
-     / \
-    4   5
-*/
-const binaryTree = new BinaryTree(root);
-console.log('🚀 ~ root:', root);
+      4   5
+  */
+  const binaryTree = new BinaryTree(root);
+  console.log('🚀 ~ root:', root);
 
-console.log('前序遍历:', binaryTree.preOrder());
-console.log('中序遍历:', binaryTree.inOrder());
-console.log('后序遍历:', binaryTree.postOrder());
-console.log('层序遍历:', binaryTree.levelOrder());
+  console.log('前序遍历:', binaryTree.preOrder());
+  console.log('中序遍历:', binaryTree.inOrder());
+  console.log('后序遍历:', binaryTree.postOrder());
+  console.log('层序遍历:', binaryTree.levelOrder());
+};
+// demo();
