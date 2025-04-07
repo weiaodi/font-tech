@@ -32,6 +32,7 @@ function buildDependencyGraph(entry) {
     if (visited.has(current)) continue;
     visited.add(current);
     const moduleInfo = parseModule(current);
+    console.log('🚀 ~ buildDependencyGraph ~ moduleInfo:', moduleInfo);
     graph.push(moduleInfo);
 
     moduleInfo.dependencies.forEach((dep) => {

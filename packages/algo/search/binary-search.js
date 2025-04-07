@@ -34,4 +34,4 @@ function binarySearch(arr, target) {
   }
   return -1;
 }
-binarySearch([1], 1);
+binarySearch([1, 2, 3, 4, 5], 1);
