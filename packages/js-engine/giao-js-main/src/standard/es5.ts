@@ -20,6 +20,7 @@ const es5 = {
     const variable = scope.search(name);
     if (variable) return variable.value;
   },
+  // 字面量节点处理直接求值,这里对正则表达式类型进行了特殊处理,其他类型直接返回value值即可。
   Literal(astPath: AstPath<ESTree.Literal>) {
     const { node } = astPath;
     if ((<ESTree.RegExpLiteral>node).regex) {
@@ -49,6 +50,8 @@ const es5 = {
     const context = scope.search('this');
     return fn.apply(context ? context.value : null, args);
   },
+  // 二元运算表达式节点处理
+  // 对left/node两个节点(Literal)进行求值,然后实现operator类型运算,返回结果。
   BinaryExpression(astPath: AstPath<ESTree.BinaryExpression>) {
     const { node, scope } = astPath;
     const leftNode = this.visitNode(node.left, scope);
@@ -70,11 +73,12 @@ const es5 = {
       '!==': (l, r) => l !== r,
     }[operator](leftNode, rightNode);
   },
-
+  // 表达式语句节点的处理,同样访问expression 属性即可。
   ExpressionStatement(astPath: AstPath<ESTree.ExpressionStatement>) {
     const { node, scope } = astPath;
     return this.visitNode(node.expression, scope);
   },
+  // 对根节点的处理就是逐个遍历每个元素
   Program(astPath: AstPath<ESTree.Program>) {
     const { node, scope } = astPath;
     node.body.forEach((bodyNode) => this.visitNode(bodyNode, scope));
