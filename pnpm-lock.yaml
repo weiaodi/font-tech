@@ -78,8 +78,6 @@ importers:
 
   packages/algo: {}
 
-  packages/hello-algo: {}
-
   packages/k6: {}
 
 packages:

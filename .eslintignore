@@ -1,4 +1,4 @@
 node_modules
 dist
 test
-./packages/js-engine/
+./packages/js-engine/giao-js-main/
