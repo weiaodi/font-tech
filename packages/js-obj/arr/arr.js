@@ -6,3 +6,7 @@ console.log('🚀 ~ fruits:', fruits);
 console.log('🚀 ~ fruits:', fruits1);
 fruits.concat(fruits1);
 console.log('🚀 ~ fruits:', fruits);
+let fruits3 = ['Banana', 'Orange', 'Apple', 'Mango'];
+let a = fruits3.entries();
+console.log('🚀 ~ fruits3:', a);
+/**  */
