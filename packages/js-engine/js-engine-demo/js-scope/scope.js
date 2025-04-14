@@ -1,13 +1,14 @@
+/* eslint-disable */
 let val = 1;
 function test() {
   console.log(val);
 }
-function bar() {
+function bar1() {
   let val = 2;
   test();
 }
 
-bar();
+bar1();
 /** 
 静态作用域执行过程
 当执行 test 函数时，先从 test 函数内部查找是否有变量 val，如果没有，就沿定义函数的位置，查找上一层的代码，查找到全局变量 val ，其值为 1。
@@ -21,3 +22,25 @@ bar();
 动态作用域执行过程
 执行 test 函数，首先从函数内部查询 val 变量，如果没有，就从调用函数的作用域，即 bar 函数的作用域内部查找变量 val，所以打印结果 2
 */
+function foo() {
+  if (true) {
+    var number = 5;
+    console.log(number);
+  }
+
+  console.log(number);
+}
+
+function bar() {
+  if (true) {
+    let number = 5;
+    console.log(number);
+  }
+
+  console.log(number);
+}
+
+foo(); // 5 和 5
+bar(); // 5 和 ReferenceError: number is not defined
+// let 声明的变量的作用域只有外层块，而不是整个外层函数。
+// var 声明的变量的作用域是整个封闭函数。

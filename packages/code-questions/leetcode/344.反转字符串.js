@@ -13,7 +13,7 @@ let reverseString = function (s) {
   //  左右指针从数组边界开始调整字符串
   let left = 0,
     right = s.length - 1;
-  let chars = s.split('');
+
   while (left < right) {
     left++;
     right--;
