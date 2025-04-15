@@ -1,8 +1,11 @@
 function pipeline(...functions) {
-  return function (initialValue) {
-    return functions.reduce(function (accumulator, currentFunction) {
-      return currentFunction(accumulator);
-    }, initialValue);
+  return function (...initialValue) {
+    return functions.reduce(
+      function (accumulator, currentFunction) {
+        return currentFunction(accumulator);
+      },
+      ...initialValue,
+    );
   };
 }
 

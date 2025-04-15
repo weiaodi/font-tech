@@ -1,3 +1,4 @@
+/* eslint-disable */
 function Person() {
   this.name = 'Alice';
   this.sayHello = function () {
@@ -75,3 +76,56 @@ function foo() {
     }, 100);
   }
 */
+
+/* 
+函数方法中的 this
+和变量不同，关键字 this 没有作用域的限制，嵌套的函数不会从调用它的函数中继承 this。
+
+如果嵌套函数作为方法调用，其 this 的值指向 调用它的对象。
+如果嵌套函数作为函数调用，其 this 值不是 全局对象（非严格模式下）就是 undefined（严格模式下）。
+ */
+
+var foo = {
+  fn() {
+    function n() {
+      return this;
+    }
+    return n();
+  },
+};
+console.log(foo.fn()); // window
+var foo = {
+  fn() {
+    function n() {
+      return this;
+    }
+    return n();
+  },
+};
+console.log(foo.fn()); // undefined
+/* 
+如果想访问这个外部函数的 this 值，需要将 this 的值保存在一个变量里，这个变量和内部函数都同在一个作用域内。通常使用变量 self 或 that 来保存 this。
+ */
+
+const foo = {
+  fn() {
+    const self = this;
+    console.log(this === foo);
+    // true
+
+    function n() {
+      console.log(this === foo);
+      // false
+
+      console.log(self === foo);
+      // true
+
+      return self;
+    }
+
+    return n();
+  },
+};
+
+console.log(foo.fn() === foo);
+// true
