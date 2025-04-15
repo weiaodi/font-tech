@@ -14,7 +14,6 @@ module.exports = {
     { value: 'publish', name: 'publish:  发布新版本' },
     { value: 'tag', name: 'tag:      发布新版本' },
     { value: 'config', name: 'config:   修改配置文件' },
-    { value: 'git', name: 'git:      添加或修改.gitignore 文件' },
   ],
   // allowTicketNumber: false,
   // isTicketNumberRequired: false,git
