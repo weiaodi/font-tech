@@ -2,3 +2,8 @@
   Vue 应用从创建到销毁的整个过程构成了全局生命周期。在这个过程中，不管是哪个组件的挂载、更新还是销毁，都处于这个大的生命周期框架内。例如，应用初始化时会执行 beforeCreate 和 created 钩子，在页面跳转时，原页面组件可能会执行 beforeDestroy 和 destroyed 钩子，新页面组件则会执行 beforeMount、mounted 等钩子，这些都是在同一个 Vue 应用的全局生命周期管理下进行的。
 
   IntersectionObserver 实例在创建并调用 observe 方法开始监听目标元素后，会在整个页面的生命周期内持续监测目标元素的交叉状态变化。
+
+- vue 和 react 核心执行原理
+- webpack打包过程 和核心流程
+- 计算机网络
+- 操作系统概论

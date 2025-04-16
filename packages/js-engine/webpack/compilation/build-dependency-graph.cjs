@@ -25,6 +25,7 @@ function parseModule(filePath) {
 function buildDependencyGraph(entry) {
   const graph = [];
   const queue = [entry];
+  console.log('🚀 ~ buildDependencyGraph ~ queue:', queue);
   const visited = new Set();
 
   while (queue.length > 0) {
@@ -36,8 +37,10 @@ function buildDependencyGraph(entry) {
     graph.push(moduleInfo);
 
     moduleInfo.dependencies.forEach((dep) => {
+      // 当前文件的路径添加上该文件依赖的文件信息,均放入执行队列中
       const depPath = path.join(path.dirname(current), dep);
       queue.push(depPath);
+      console.log('🚀 ~ moduleInfo.dependencies.forEach ~ queue:', queue);
     });
   }
 
@@ -47,7 +50,6 @@ function buildDependencyGraph(entry) {
 const currentDir = __dirname;
 // 计算 math.js 的绝对路径
 const mathModulePath = path.resolve(currentDir, './src/index.js');
-console.log('🚀 ~ mathModulePath:', mathModulePath);
 
 const dependencyGraph = buildDependencyGraph(mathModulePath);
 console.log(dependencyGraph);
