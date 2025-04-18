@@ -4,6 +4,7 @@ const promise = new Promise((resolve, reject) => {
   }, 1000);
 });
 const promise1 = Promise.resolve(2);
+
 function customPromiseAll(promiseArr) {
   return new Promise((resolve, reject) => {
     // 最终返回一个执行结果的数组

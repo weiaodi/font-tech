@@ -7,6 +7,5 @@
 - webpack打包过程 和核心流程
 - 计算机网络
 - 操作系统概论
-- call bind apply原理书写
 - 对象的增删改查方法书写,同时探究其执行效率
 - promise方法使用和常用promise方法的实现
