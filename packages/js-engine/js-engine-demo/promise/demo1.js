@@ -22,6 +22,4 @@ async function selectDrink() {
 (async () => {
   // 并发执行这些非阻塞异步函数
   Promise.all([selectPizza(), selectDrink()]).then(orderItems);
-  // 另一种写法
-  await Promise.all(selectPizza().then(choosePizza), selectDrink().then(chooseDrink));
 })();
