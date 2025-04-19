@@ -16,6 +16,7 @@ class FuncWraper {
     return this.fn(...args);
   }
 }
+
 const addBefore = function (fn, beforeFn) {
   return function (...arg) {
     beforeFn.apply(this, arg);
