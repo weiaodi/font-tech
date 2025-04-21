@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      .parent {
+        width: 220px;
+        border: 1px solid black;
+      }
+
+      .float-left-box {
+        /* float:left 应该理解为：在自己本身的位置上脱离文档流，元素从包含框的右边缘向左移动，直到碰到包含框的左边缘或者其他浮动元素框停下，当空间不足以绘制自己则另起一行。
+
+float:right 应该理解为： 在自己本身的位置上脱离文档流，元素从包含框的左边缘向右移动，直到碰到包含框的右边缘或者其他浮动元素的框停下，当空间不足以绘制自己则另起一行。 */
+        float: left;
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+        margin: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="parent">
+      <div class="float-left-box">浮动盒子 1</div>
+      <div class="float-left-box">浮动盒子 2</div>
+      <div class="float-left-box">浮动盒子 3</div>
+    </div>
+  </body>
+</html>

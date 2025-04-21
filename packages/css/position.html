@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        height: 5000px;
+      }
+      .static-box {
+        position: static;
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+      }
+      .relative-box {
+        /* 相对定位的元素仍然处于正常文档流中，占据原本的空间位置。通过设置 top、right、bottom 和 left 属性，可以使元素相对于其正常位置进行偏移，但不会影响其他元素的布局，其他元素仍会按照该元素未偏移时的位置进行布局。 */
+        position: relative;
+        top: 20px;
+        left: 20px;
+        width: 100px;
+        height: 100px;
+        background-color: lightgreen;
+      }
+
+      .relative-box-parent {
+        /* 相对定位的元素可以作为其内部绝对定位元素的参考元素。当一个绝对定位的元素的祖先元素中有相对定位的元素时，它会相对于这个相对定位的祖先元素进行定位。 */
+        position: relative;
+        /* 当元素的 position 属性值设置为 relative（相对定位）、absolute（绝对定位）、fixed（固定定位）或 sticky（粘性定位）时，z-index 属性可以正常发挥作用，用于控制元素在 z 轴方向上的堆叠顺序。 */
+        /* 对于 position 属性值为 relative、absolute、fixed 或 sticky 的定位元素，z-index 的默认值是 auto。这意味着如果没有为这些定位元素显式设置 z-index 值，它们会按照元素在 HTML 文档中的先后顺序进行堆叠，后面的元素会覆盖前面的元素。
+                       */
+        z-index: 1;
+
+        top: 10px;
+        left: 10px;
+        width: 300px;
+        height: 300px;
+        background-color: rgb(0, 0, 0);
+        .absolute-box-child {
+          position: absolute;
+          top: 50px;
+          left: 50px;
+          width: 50px;
+          height: 50px;
+          background-color: rgb(255, 0, 0);
+        }
+      }
+
+      .absolute-box {
+        /* 绝对定位的元素的位置是相对于离它最近的已定位祖先元素（即 position 属性值不为 static 的祖先元素）来确定的。 */
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        width: 100px;
+        height: 100px;
+        background-color: lightcoral;
+      }
+      .fixed-box {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 100px;
+        height: 100px;
+        background-color: lightyellow;
+      }
+      .sticky-box-parent {
+        overflow: auto;
+        width: 200px;
+        background-color: red;
+        .sticky-box-container {
+          width: 2000px;
+          background-color: red;
+          .sticky-box {
+            /* 如果元素没有设置了 overflow 属性值为 auto、scroll、hidden 或 overlay 的祖先元素，那么它会相对于根元素（<html>）进行粘性定位 */
+            /* 如果元素有设置了 overflow 属性值为 auto、scroll、hidden 或 overlay 的祖先元素，那么它会相对于这个祖先元素进行粘性定位 */
+            position: sticky;
+            left: 50px;
+            width: 100px;
+            height: 100px;
+            background-color: lightpink;
+          }
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="relative-box">相对定位元素</div>
+    <div class="relative-box-parent">
+      <div class="absolute-box-child">绝对定位的子元素元素</div>
+    </div>
+    <div class="static-box">静态定位元素</div>
+    <div class="absolute-box">绝对定位元素</div>
+    <div class="sticky-box-parent">
+      <div class="sticky-box-container">
+        <div class="sticky-box">粘性定位元素</div>
+        <div>a</div>
+      </div>
+    </div>
+
+    <div class="fixed-box">固定定位元素</div>
+  </body>
+</html>
