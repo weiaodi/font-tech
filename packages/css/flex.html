@@ -1,2 +1,79 @@
 <!-- 当元素是 display 属性值为 flex 或 grid 的容器的子元素时，即便没有显式设置 position 属性，z-index 也能起作用。
  -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      .container {
+        /* flex-direction 属性决定主轴的方向（即项目的排列方向）。
+        
+row（默认值）：主轴为水平方向，起点在左端。
+row-reverse：主轴为水平方向，起点在右端。
+column：主轴为垂直方向，起点在上沿。
+column-reverse：主轴为垂直方向，起点在下沿。
+        */
+        width: 700px;
+        height: 700px;
+        display: flex;
+        /* flex-wrap 属性定义，如果一条轴线排不下，如何换行
+nowrap（默认）：不换行。会压缩项目的宽度。
+wrap：换行，第一行在上方。
+wrap-reverse：换行，第一行在下方。
+
+        
+        */
+        flex-wrap: wrap; /* 换行，第一行在上方 */
+
+        /* flex-flow 属性是 flex-direction 属性和 flex-wrap 属性的简写形式 */
+        /* flex-flow: <flex-direction> || <flex-wrap>; */
+
+        /* justify-content 属性定义了项目在主轴上的对齐方式 
+    
+flex-start（默认值）：左对齐
+flex-end：右对齐
+center： 居中
+space-between：两端对齐，项目之间的间隔都相等。
+space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。    
+        */
+        /* align-items 属性定义项目在交叉轴上如何对齐。
+         align-items: flex-start | flex-end | center | baseline | stretch;
+flex-start：交叉轴的起点对齐。
+flex-end：交叉轴的终点对齐。
+center：交叉轴的中点对齐。
+baseline: 项目的第一行文字的基线对齐。
+stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。
+        */
+
+        /* align-content：多根轴线对齐方式。如果元素只有一根轴线，该属性不起作用。它有六个属性值：
+
+        实际上这主要是由flex-wrap属性决定的，当flex-wrap 设置为 nowrap 时，容器仅存在一根轴线，因为项目不会换行，就不会产生多条轴线。当 flex-wrap 设置为 wrap 时，容器可能会出现多条轴线，这时就需要去设置多条轴线之间的对齐方式。
+
+flex-start：与交叉轴的起点对齐。
+flex-end：与交叉轴的终点对齐。
+center：与交叉轴的中点对齐。
+space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。
+space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。
+stretch（默认值）：轴线占满整个交叉轴。
+
+        
+        */
+      }
+      .item {
+        width: 200px;
+        height: 100px;
+        background-color: lightgreen;
+        margin: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="item">1</div>
+      <div class="item">2</div>
+      <div class="item">3</div>
+      <div class="item">4</div>
+    </div>
+  </body>
+</html>
