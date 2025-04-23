@@ -98,6 +98,67 @@ async function updateAndWait() {
 }
 ```
 
+在 Vue.js 中，`Vue.nextTick` 和 `this.$nextTick` 都与处理 DOM 更新有关，但它们之间存在一些区别，下面为你详细介绍。
+
+### 基本功能
+
+`Vue.nextTick` 和 `this.$nextTick` 本质上都是用于在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，你可以获取更新后的 DOM。
+
+### 区别
+
+#### 1. 调用方式与上下文
+
+- **`Vue.nextTick`**：
+  - 这是一个全局 API，它是 Vue 构造函数的一个静态方法。你可以在任何地方直接使用 `Vue.nextTick` 来调用，不需要依赖于某个 Vue 实例。通常在非组件环境或者需要全局处理 DOM 更新的场景中使用。
+  - 示例代码如下：
+
+```javascript
+import Vue from 'vue';
+
+// 修改数据
+const data = { message: 'Hello' };
+const vm = new Vue({
+  data: data,
+});
+vm.message = 'World';
+
+// 使用 Vue.nextTick
+Vue.nextTick(() => {
+  // 这里可以访问更新后的 DOM
+  console.log('DOM 更新后执行');
+});
+```
+
+- **`this.$nextTick`**：
+  - 这是一个实例方法，只能在 Vue 组件的实例中使用，通过 `this` 来调用。`this` 指向当前的 Vue 实例，因此它可以访问该实例的属性和方法。在组件内部需要处理 DOM 更新的场景中使用较多。
+  - 示例代码如下：
+
+```javascript
+export default {
+  data() {
+    return {
+      message: 'Hello',
+    };
+  },
+  methods: {
+    updateMessage() {
+      this.message = 'World';
+      // 使用 this.$nextTick
+      this.$nextTick(() => {
+        // 这里可以访问更新后的 DOM
+        console.log('DOM 更新后执行');
+      });
+    },
+  },
+};
+```
+
+#### 2. 上下文的作用
+
+- **`Vue.nextTick`**：由于是全局方法，在回调函数中没有自动绑定到某个 Vue 实例的上下文，如果你需要访问 Vue 实例的属性或方法，需要手动传递实例或者使用箭头函数来捕获上下文。
+- **`this.$nextTick`**：回调函数会自动绑定到当前的 Vue 实例上下文，你可以直接使用 `this` 来访问实例的属性和方法，代码更加简洁和直观。
+
 ### 总结
 
-`Vue.nextTick` 是 Vue 异步更新机制的重要补充，它允许开发者在 DOM 更新完成后执行回调函数，从而确保在操作 DOM 时获取到最新的 DOM 状态。在实际开发中，合理使用 `Vue.nextTick` 可以避免很多因 DOM 更新异步带来的问题。
+- `Vue.nextTick` 是全局方法，可在任何地方调用，适用于非组件环境或全局处理 DOM 更新的场景，但在回调中访问实例属性需要手动处理上下文。
+- `this.$nextTick` 是实例方法，只能在 Vue 组件实例中使用，回调函数自动绑定到当前实例上下文，便于在组件内部处理 DOM 更新后操作实例属性和方法。
