@@ -27,7 +27,7 @@ function debounce(fn, interval = 500, immediate = false) {
   let timer = null;
   return function (...args) {
     if (immediate) {
-      fn.apply(this.args);
+      fn.apply(this, args);
     }
     if (timer) {
       clearTimeout(timer);
