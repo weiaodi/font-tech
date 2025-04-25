@@ -67,6 +67,9 @@ const state = reactive({
 effect(() => {
   console.log('Count:', state.count);
 });
+effect(() => {
+  console.log('Count1:', state.count);
+});
 
 // 修改 state.count 的值，触发更新，控制台会输出新的 count 值
 state.count++;

@@ -202,9 +202,29 @@ function showOtherMethods() {
 }
 
 // 调用所有展示方法
-showSearchMethods();
-showAdditionMethods();
-showRemovalAndReplacementMethods();
-showConversionMethods();
-showSortingAndJudgmentMethods();
-showOtherMethods();
+// showSearchMethods();
+// showAdditionMethods();
+// showRemovalAndReplacementMethods();
+// showConversionMethods();
+// showSortingAndJudgmentMethods();
+// showOtherMethods();
+
+// const set = new Set([1, 2, 3]);
+// set.forEach((value) => {
+//   console.log(value);
+//   if (value === 2) {
+//     set.delete(2);
+//     set.add(2);
+//   }
+// });
+
+const originalSet = new Set([1, 2, 3]);
+const newSet = new Set(originalSet);
+
+newSet.forEach((value) => {
+  console.log(value);
+  if (value === 2) {
+    originalSet.delete(2);
+    originalSet.add(2);
+  }
+});
