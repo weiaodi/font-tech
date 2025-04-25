@@ -29,7 +29,7 @@ console.log('🚀 ~ enumable:', enumable);
 for (const key in p) {
   console.log('🚀 ~ key:', key);
 }
-// 如果想只获取当前对象的所有可枚举属性 通过对象的
+// 如果想只获取当前对象的所有可枚举属性
 for (const key in p) {
   if (Object.prototype.hasOwnProperty.call(p, key)) {
     console.log('🚀 ~ key objOwn:', key);
