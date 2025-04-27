@@ -84,4 +84,4 @@ const demo = () => {
   console.log('后序遍历:', binaryTree.postOrder());
   console.log('层序遍历:', binaryTree.levelOrder());
 };
-// demo();
+demo();

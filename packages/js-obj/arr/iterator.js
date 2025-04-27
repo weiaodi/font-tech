@@ -16,9 +16,9 @@ while (!result.done) {
   result = iterator.next();
 }
 // for...of 循环遍历 iterator，循环会自动处理 next() 方法的调用和 done 属性的判断。
-for (const i of iterator1) {
-  console.log('🚀 ~ i:', i);
-}
+// for (const i of iterator1) {
+//   console.log('🚀 ~ i:', i);
+// }
 //
 class MyCollection {
   items;
@@ -39,9 +39,6 @@ class MyCollection {
   }
 }
 
-let demo = new MyCollection([1, 2, 3, 4, 5, 2, 6, 7, 1]);
-for (const id of demo) {
-}
 const demo1 = {
   items: [1, 2, 3, 4, 5, 2, 6, 7, 1],
   [Symbol.iterator]() {
@@ -58,5 +55,3 @@ const demo1 = {
     };
   },
 };
-for (const id of demo1) {
-}
