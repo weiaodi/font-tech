@@ -40,19 +40,3 @@ let lengthOfLIS = function (nums) {
   return ascend.length;
 };
 // @lc code=end
-let lengthOfLIS1 = function (nums) {
-  if (nums.length === 0) return 0;
-  // 以nums[cur]结尾的最大子序列
-  const subOrderList = Array(nums.length).fill(1);
-  let maxLength = 1;
-  for (let cur = 1; cur < nums.length; cur++) {
-    for (let pre = 0; pre < cur; pre++) {
-      // 可以加入该子序列,则需要判断当前最大子序列的大小
-      if (nums[pre] < nums[cur]) {
-        subOrderList[cur] = Math.max(subOrderList[cur], subOrderList[pre] + 1);
-      }
-    }
-    maxLength = Math.max(subOrderList[cur], maxLength);
-  }
-  return maxLength;
-};

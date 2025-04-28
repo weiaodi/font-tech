@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+      }
+
+      /* 容器样式 */
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* 左栏样式 */
+      .left {
+        width: 200px;
+        background-color: lightblue;
+      }
+
+      /* 中间栏样式 */
+      .middle {
+        /* 
+         flex: 1（即 flex-grow: 1、flex-shrink: 1 和 flex-basis: 0）的组合使得中间栏在容器有剩余空间时会放大以填充剩余空间，在容器空间不足时会缩小，并且初始大小为 0。
+        
+        */
+        flex: 1;
+        background-color: lightgreen;
+      }
+
+      /* 右栏样式 */
+      .right {
+        width: 200px;
+        background-color: lightcoral;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="left">左栏</div>
+      <div class="middle">中间栏，宽度自适应</div>
+      <div class="right">右栏</div>
+    </div>
+  </body>
+</html>

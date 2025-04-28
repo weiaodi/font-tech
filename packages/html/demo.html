@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>事件委托示例</title>
+  </head>
+
+  <body>
+    <ul id="myList">
+      <li>列表项 1</li>
+      <li>列表项 2</li>
+      <li>列表项 3</li>
+    </ul>
+    <script>
+      const list = document.getElementById('myList');
+      list.addEventListener('click', function (event) {
+        if (event.target.tagName === 'LI') {
+          console.log('点击了列表项:', event.target.textContent);
+        }
+      });
+    </script>
+  </body>
+</html>
