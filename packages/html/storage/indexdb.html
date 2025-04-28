@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IndexedDB Example</title>
+  </head>
+
+  <body>
+    <button id="addData">添加数据</button>
+    <button id="getData">获取数据</button>
+    <button id="deleteData">删除数据</button>
+    <div id="output"></div>
+
+    <script>
+      // 打开或创建数据库
+      const request = indexedDB.open('myDatabase', 1);
+      let db;
+
+      // 数据库升级时触发
+      request.onupgradeneeded = function (event) {
+        db = event.target.result;
+        // 创建一个对象存储空间
+        const objectStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+        // 创建索引
+        objectStore.createIndex('name', 'name', { unique: false });
+      };
+
+      request.onsuccess = function (event) {
+        db = event.target.result;
+        console.log('数据库打开成功');
+      };
+
+      request.onerror = function (event) {
+        console.log('数据库打开失败');
+      };
+
+      // 添加数据
+      document.getElementById('addData').addEventListener('click', function () {
+        const transaction = db.transaction(['users'], 'readwrite');
+        const objectStore = transaction.objectStore('users');
+        const newUser = { name: 'John Doe', age: 30 };
+        const addRequest = objectStore.add(newUser);
+
+        addRequest.onsuccess = function (event) {
+          console.log('数据添加成功');
+        };
+
+        addRequest.onerror = function (event) {
+          console.log('数据添加失败');
+        };
+      });
+
+      // 获取数据
+      document.getElementById('getData').addEventListener('click', function () {
+        const transaction = db.transaction(['users']);
+        const objectStore = transaction.objectStore('users');
+        const index = objectStore.index('name');
+        const getRequest = index.get('John Doe');
+
+        getRequest.onsuccess = function (event) {
+          const result = event.target.result;
+          if (result) {
+            const output = document.getElementById('output');
+            output.textContent = `ID: ${result.id}, 姓名: ${result.name}, 年龄: ${result.age}`;
+          } else {
+            console.log('未找到数据');
+          }
+        };
+
+        getRequest.onerror = function (event) {
+          console.log('数据获取失败');
+        };
+      });
+
+      // 删除数据
+      document.getElementById('deleteData').addEventListener('click', function () {
+        const transaction = db.transaction(['users'], 'readwrite');
+        const objectStore = transaction.objectStore('users');
+        const index = objectStore.index('name');
+        const getRequest = index.get('John Doe');
+
+        getRequest.onsuccess = function (event) {
+          const result = event.target.result;
+          if (result) {
+            const deleteRequest = objectStore.delete(result.id);
+            deleteRequest.onsuccess = function (event) {
+              console.log('数据删除成功');
+            };
+            deleteRequest.onerror = function (event) {
+              console.log('数据删除失败');
+            };
+          } else {
+            console.log('未找到要删除的数据');
+          }
+        };
+
+        getRequest.onerror = function (event) {
+          console.log('查找要删除的数据失败');
+        };
+      });
+    </script>
+  </body>
+</html>

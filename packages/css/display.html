@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .block-element {
+        display: block;
+        /* 
+block：元素独占一行，可设宽高，内外边距生效。
+inline：元素同行显示，宽高由内容定，上下外边距不生效。
+inline-block：同行显示，可设宽高，内外边距都生效。
+none：元素不显示，不占页面空间。
+flex：元素成弹性容器，方便子元素布局。
+grid：元素成网格容器，用于创建二维网格布局。
+        */
+        background-color: lightblue;
+        width: 200px;
+        height: 50px;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="block-element">这是一个块级元素</div>
+    <div class="block-element">另一个块级元素</div>
+  </body>
+</html>

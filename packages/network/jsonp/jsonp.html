@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONP 跨域示例</title>
+  </head>
+
+  <body>
+    <div>demo</div>
+    <script>
+      const script = document.createElement('script');
+      script.src = 'http://localhost:3333?callback=handleResponse';
+      function handleResponse(data) {
+        console.log('收到的数据:', data);
+      }
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

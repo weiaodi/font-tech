@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iframe Page</title>
+  </head>
+
+  <body>
+    <script>
+      // 监听主页面发送的消息
+      window.addEventListener('message', function (event) {
+        if (event.origin === 'http://example.com') {
+          const responseMessage = `收到主页面的消息: ${event.data}`;
+          // 向主页面发送响应消息
+          event.source.postMessage(responseMessage, event.origin);
+        }
+      });
+    </script>
+  </body>
+</html>

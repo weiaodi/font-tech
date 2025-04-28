@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+  </head>
+
+  <body>
+    <iframe id="iframe" src="http://anotherdomain.com/iframe.html"></iframe>
+    <button id="sendMessage">发送消息</button>
+    <div id="response"></div>
+
+    <script>
+      const iframe = document.getElementById('iframe');
+      const sendMessageButton = document.getElementById('sendMessage');
+      const responseDiv = document.getElementById('response');
+
+      // 监听 iframe 发送的消息
+      window.addEventListener('message', function (event) {
+        if (event.origin === 'http://anotherdomain.com') {
+          responseDiv.textContent = `收到来自 iframe 的消息: ${event.data}`;
+        }
+      });
+
+      sendMessageButton.addEventListener('click', function () {
+        const message = '这是来自主页面的消息';
+        // 向 iframe 发送消息
+        iframe.contentWindow.postMessage(message, 'http://anotherdomain.com');
+      });
+    </script>
+  </body>
+</html>
