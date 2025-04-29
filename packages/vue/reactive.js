@@ -47,7 +47,6 @@ function reactive(obj) {
       if (result && oldValue !== newValue) {
         trigger(target, key);
       }
-
       return result;
     },
   });
