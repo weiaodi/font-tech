@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode.cn id=206 lang=javascript
+ * @lc app=leetcode.cn id=876 lang=javascript
  *
- * [206] 反转链表
+ * [876] 链表的中间结点
  */
 
 // @lc code=start
@@ -16,16 +16,14 @@
  * @param {ListNode} head
  * @return {ListNode}
  */
-let reverseList = function (head) {
-  //  1>2>3>null  null>1>2>3
-  let pre = null,
-    cur = head;
-  while (cur) {
-    let next = cur.next;
-    cur.next = pre;
-    pre = cur;
-    cur = next;
+let middleNode = function (head) {
+  // 1 2 3 4  11  23  3 null
+  let fast = head,
+    slow = head;
+  while (fast && fast.next) {
+    fast = fast.next.next;
+    slow = slow.next;
   }
-  return pre;
+  return slow;
 };
 // @lc code=end

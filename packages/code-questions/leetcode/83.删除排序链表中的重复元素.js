@@ -17,20 +17,33 @@
  * @return {ListNode}
  */
 let deleteDuplicates = function (head) {
-  if (!head) {
+  if (!head || !head.next) {
     return head;
   }
-  let slow = head,
-    fast = head;
+  let cur = head;
+  while (cur && cur.next) {
+    if (cur.val === cur.next.val) {
+      cur.next = cur.next.next;
+    } else {
+      cur = cur.next;
+    }
+  }
+  return head;
+};
+// @lc code=end
+let deleteDuplicates1 = function (head) {
+  if (!head || !head.next) {
+    return head;
+  }
+  let fast = head.next,
+    slow = head;
   while (fast) {
-    if (slow.val !== fast.val) {
-      //   slow --- fast 之间的节点只有可能是重复的节点
+    if (fast.val !== slow.val) {
       slow.next = fast;
-      slow = slow.next;
+      slow = fast;
     }
     fast = fast.next;
   }
   slow.next = null;
   return head;
 };
-// @lc code=end

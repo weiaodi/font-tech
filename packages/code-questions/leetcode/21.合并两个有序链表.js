@@ -19,20 +19,19 @@
  */
 let mergeTwoLists = function (list1, list2) {
   // eslint-disable-next-line no-undef
-  const headNode = new ListNode();
-  let pre = headNode;
+  const listHead = new ListNode();
+  let cur = listHead;
   while (list1 && list2) {
     if (list1.val > list2.val) {
-      pre.next = list2;
+      cur.next = list2;
       list2 = list2.next;
     } else {
-      pre.next = list1;
+      cur.next = list1;
       list1 = list1.next;
     }
-    pre = pre.next;
+    cur = cur.next;
   }
-
-  pre.next = list1 !== null ? list1 : list2;
-  return headNode.next;
+  cur.next = list1 === null ? list2 : list1;
+  return listHead.next;
 };
 // @lc code=end

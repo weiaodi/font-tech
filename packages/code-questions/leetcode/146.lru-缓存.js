@@ -5,49 +5,51 @@
  */
 
 // @lc code=start
-class Node {
-  constructor(key, value) {
+/**
+ * @param {number} capacity
+ */
+class DLinkList {
+  constructor(key = 0, value = 0) {
     this.key = key;
     this.value = value;
     this.pre = null;
     this.next = null;
   }
 }
-/**
- * @param {number} capacity
- */
 let LRUCache = function (capacity) {
-  this.capacity = capacity;
   this.cache = new Map();
-  this.head = new Node(0, 0);
-  this.tail = new Node(0, 0);
+  this.head = new DLinkList();
+  this.tail = new DLinkList();
   this.head.next = this.tail;
   this.tail.pre = this.head;
-};
-LRUCache.prototype.insert = function (node) {
-  // 每次插入节点到头部
-  const nextNode = this.head.next;
-  this.head.next = node;
-  node.pre = this.head;
-  node.next = nextNode;
-  nextNode.pre = node;
+  this.capacity = capacity;
+  this.size = 0;
 };
 LRUCache.prototype.delete = function (node) {
-  const nextNode = node.next;
-  const preNode = node.pre;
-  nextNode.pre = preNode;
-  preNode.next = nextNode;
+  const pre = node.pre;
+  const next = node.next;
+  pre.next = next;
+  next.pre = pre;
 };
+LRUCache.prototype.addtoHead = function (node) {
+  const next = this.head.next;
+  this.head.next = node;
+  node.pre = this.head;
+
+  node.next = next;
+  next.pre = node;
+};
+
 /**
  * @param {number} key
  * @return {number}
  */
 LRUCache.prototype.get = function (key) {
-  // 因为元素被获取,所有需要更新到头部
+  // 缓存中读取数值 将当前数值移动到链表头部  先删除,再添加
   if (this.cache.has(key)) {
     const node = this.cache.get(key);
     this.delete(node);
-    this.insert(node);
+    this.addtoHead(node);
     return node.value;
   }
   return -1;
@@ -59,18 +61,22 @@ LRUCache.prototype.get = function (key) {
  * @return {void}
  */
 LRUCache.prototype.put = function (key, value) {
+  //  先判断key是否存在  如果存在则更新value数值 如果不存在添加新数值到缓存
   if (this.cache.has(key)) {
     const node = this.cache.get(key);
+    node.value = value;
     this.delete(node);
-  }
-  const newNode = new Node(key, value);
-  this.cache.set(key, newNode);
-  this.insert(newNode);
-  if (this.cache.size > this.capacity) {
-    const oldNode = this.tail.pre;
-    this.delete(oldNode);
-    // 不可直接传入key的原因是 如果当前的key不是旧的节点 就应该更新后再删除原来旧的节点
-    this.cache.delete(oldNode.key);
+    this.addtoHead(node);
+  } else {
+    const node = new DLinkList(key, value);
+    this.cache.set(key, node);
+    this.addtoHead(node);
+    this.size++;
+    if (this.size > this.capacity) {
+      this.cache.delete(this.tail.pre.key);
+      this.delete(this.tail.pre);
+      this.size--;
+    }
   }
 };
 
