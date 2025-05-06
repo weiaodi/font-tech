@@ -12,18 +12,32 @@
  */
 let findKthLargest = function (nums, k) {
   let heap = [];
-  const add = (item) => {
+  function add(params) {
     if (heap.length < k) {
-      heap.push(item);
-      heapUp(heap.length - 1);
-    } else if (item > heap[0]) {
-      heap[0] = item;
-      heapDown(0);
+      heap.push(params);
+      up(heap.length - 1);
+    } else if (params > heap[0]) {
+      heap[0] = params;
+      down(0);
     }
-  };
-
-  const heapUp = (index) => {
-    while (index > 0) {
+  }
+  function down(index) {
+    let left = index * 2 + 1;
+    let right = index * 2 + 2;
+    let cur = index;
+    if (left < heap.length && heap[left] < heap[cur]) {
+      cur = left;
+    }
+    if (right < heap.length && heap[right] < heap[cur]) {
+      cur = right;
+    }
+    if (cur !== index) {
+      [heap[cur], heap[index]] = [heap[index], heap[cur]];
+      down(cur);
+    }
+  }
+  function up(index) {
+    while (index) {
       let parent = Math.floor((index - 1) / 2);
       if (heap[index] < heap[parent]) {
         [heap[parent], heap[index]] = [heap[index], heap[parent]];
@@ -32,30 +46,7 @@ let findKthLargest = function (nums, k) {
         break;
       }
     }
-  };
-
-  const heapDown = (index) => {
-    // 先判断是否大于左右节点,左右节点是否越级
-    while (true) {
-      let min = index;
-      let left = index * 2 + 1;
-      let right = index * 2 + 2;
-      if (left < heap.length && heap[min] > heap[left]) {
-        min = left;
-      }
-      if (right < heap.length && heap[min] > heap[right]) {
-        min = right;
-      }
-      if (min !== index) {
-        [heap[min], heap[index]] = [heap[index], heap[min]];
-        index = min;
-      } else {
-        //
-        break;
-      }
-    }
-  };
-
+  }
   for (const element of nums) {
     add(element);
   }

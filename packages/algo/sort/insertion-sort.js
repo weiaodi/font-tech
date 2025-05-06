@@ -1,13 +1,12 @@
 function insertionSort(arr) {
-  for (let i = 1; i < arr.length; i++) {
-    let currentSort = arr[i];
-    let lastSortedIndex = i - 1;
-    while (lastSortedIndex > 0 && arr[lastSortedIndex] > currentSort) {
-      arr[lastSortedIndex + 1] = arr[lastSortedIndex];
-      lastSortedIndex--;
+  for (let index = 1; index < arr.length; index++) {
+    let curSort = arr[index];
+    let lastSorted = index - 1;
+    while (lastSorted && curSort < arr[lastSorted]) {
+      arr[lastSorted + 1] = arr[lastSorted];
+      lastSorted--;
     }
-    let insertIndex = lastSortedIndex + 1;
-    arr[insertIndex] = currentSort;
+    arr[lastSorted + 1] = curSort;
   }
   return arr;
 }

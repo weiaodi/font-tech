@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>监听列表元素点击</title>
+  </head>
+
+  <body>
+    <ul id="myList">
+      <!-- 这里可以添加大量的列表项 -->
+      <li>列表项 1</li>
+      <li>列表项 2</li>
+      <li>列表项 3</li>
+      <!-- 可以继续添加更多列表项 -->
+    </ul>
+    <script>
+      const list1 = document.querySelector('#myList');
+      list1.addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+          const text = event.target.textContent;
+          console.log('🚀 ~ list1.addEventListener ~ text:', text);
+        }
+      });
+      const list = document.getElementById('myList');
+    </script>
+  </body>
+</html>

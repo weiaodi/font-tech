@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>事件方法区别示例</title>
+  </head>
+
+  <body>
+    <a href="https://www.example.com" id="myLink">点击我跳转</a>
+    <div id="parentDiv" style="padding: 20px; background-color: lightblue">
+      <button id="myButton">点击我</button>
+    </div>
+    <script>
+      // preventDefault 示例
+      const link = document.getElementById('myLink');
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        console.log('使用 preventDefault 阻止了链接跳转');
+      });
+
+      // stopPropagation 示例
+      const parentDiv = document.getElementById('parentDiv');
+      const button = document.getElementById('myButton');
+
+      button.addEventListener('click', function (event) {
+        console.log('第一个点击事件监听器触发');
+        event.stopImmediatePropagation();
+        // event.stopPropagation();
+      });
+
+      button.addEventListener('click', function (event) {
+        console.log('第二个点击事件监听器触发');
+      });
+
+      parentDiv.addEventListener('click', function () {
+        console.log('父元素点击事件触发');
+      });
+    </script>
+  </body>
+</html>
