@@ -21,6 +21,7 @@ let nr1 = strr.substring(1, 3);
 console.log('🚀 ~ nr11111111:', nr, nr1);
 let strq = 'How are you doing today?';
 let nq = strq.split(' ');
+console.log('🚀 ~ nq:', nq);
 let strx = '       Runoob        ';
 strx.trim();
 console.log('🚀 ~ strx.trim():', strx.trim());
