@@ -81,7 +81,7 @@ function showRemovalAndReplacementMethods() {
   fruits1.copyWithin(2, 1, 3);
   console.log('删除和替换方法 - copyWithin：第二种复制方式结果', fruits1);
 }
-
+showRemovalAndReplacementMethods();
 // 展示转换相关方法的使用
 function showConversionMethods() {
   let fruits = ['Banana', 'Orange', 'Apple', 'Mango'];
@@ -218,13 +218,13 @@ function showOtherMethods() {
 //   }
 // });
 
-const originalSet = new Set([1, 2, 3]);
-const newSet = new Set(originalSet);
+// const originalSet = new Set([1, 2, 3]);
+// const newSet = new Set(originalSet);
 
-newSet.forEach((value) => {
-  console.log(value);
-  if (value === 2) {
-    originalSet.delete(2);
-    originalSet.add(2);
-  }
-});
+// newSet.forEach((value) => {
+//   console.log(value);
+//   if (value === 2) {
+//     originalSet.delete(2);
+//     originalSet.add(2);
+//   }
+// });
