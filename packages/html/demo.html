@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>事件委托示例</title>
+    <title>内存泄漏</title>
   </head>
 
   <body>
@@ -13,11 +13,28 @@
       <li>列表项 3</li>
     </ul>
     <script>
+      function outerFunction() {
+        // 大内存变量
+        const largeData = new Array(10000).fill(0).map((v) => {
+          const dom = document.createElement('div');
+          dom.innerHTML = v;
+          return dom;
+        });
+
+        function a() {
+          // 函数 a 使用大内存变量
+          largeData;
+        }
+
+        function b() {}
+
+        return b;
+      }
+
+      let list1 = [];
       const list = document.getElementById('myList');
       list.addEventListener('click', function (event) {
-        if (event.target.tagName === 'LI') {
-          console.log('点击了列表项:', event.target.textContent);
-        }
+        list1.push(outerFunction());
       });
     </script>
   </body>

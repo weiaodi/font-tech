@@ -44,3 +44,5 @@ foo(); // 5 和 5
 bar(); // 5 和 ReferenceError: number is not defined
 // let 声明的变量的作用域只有外层块，而不是整个外层函数。
 // var 声明的变量的作用域是整个封闭函数。
+
+// 为了保持兼容性，var命令和function命令声明的全局变量，依旧是顶层对象的属性；另一方面规定，let命令、const命令、class命令声明的全局变量，不属于顶层对象的属性。
