@@ -1,6 +1,7 @@
 //
 function bubbleSort(arr) {
   let n = arr.length;
+  // 每次都能保证上浮到最大元素到末尾 n-i-1
   for (let i = 0; i < n - 1; i++) {
     // Last i elements are already sorted
     for (let j = 0; j < n - i - 1; j++) {

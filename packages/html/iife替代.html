@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IIFE与现代替代方案示例</title>
+  </head>
+  <body>
+    <script>
+      // 1. 模块化
+      // IIFE写法
+      (function (window) {
+        const PI = 3.14;
+        function add(a, b) {
+          return a + b;
+        }
+        function multiply(a, b) {
+          return a * b;
+        }
+        window.MathUtils = {
+          add,
+          multiply,
+        };
+      })(window);
+      console.log('IIFE模块化 - 加法结果:', MathUtils.add(2, 3));
+      // 现代替代方案（ES6模块，在浏览器环境中通过type="module"支持）
+      // 由于这里在同一个script标签内模拟，实际应用中是不同文件
+      const { add: es6Add, multiply: es6Multiply } = {
+        add(a, b) {
+          return a + b;
+        },
+        multiply(a, b) {
+          return a * b;
+        },
+      };
+      console.log('ES6模块化 - 加法结果:', es6Add(2, 3));
+
+      // 2. 块级作用域
+      // IIFE写法
+      (function () {
+        var message = 'Hello from IIFE block';
+        console.log('IIFE块级作用域内的消息:', message);
+      })();
+      // console.log(message); // 报错：ReferenceError
+
+      // 现代替代方案
+      {
+        let message = 'Hello from modern block';
+        console.log('现代块级作用域内的消息:', message);
+      }
+      // console.log(message); // 报错：ReferenceError
+
+      // 3. 私有状态
+      // IIFE写法
+      const CounterIIFE = (function () {
+        let count = 0;
+        return {
+          increment() {
+            count++;
+          },
+          getCount() {
+            return count;
+          },
+        };
+      })();
+      CounterIIFE.increment();
+      console.log('IIFE实现的计数器值:', CounterIIFE.getCount());
+      // console.log(CounterIIFE.count); // undefined
+
+      // 现代替代方案（类的私有字段）
+      class CounterModern {
+        #count = 0;
+        increment() {
+          this.#count++;
+        }
+        getCount() {
+          return this.#count;
+        }
+      }
+      const counter = new CounterModern();
+      counter.increment();
+      console.log('现代类实现的计数器值:', counter.getCount());
+      // console.log(counter.#count); // 报错：SyntaxError
+
+      // 4. 依赖注入
+      // IIFE写法
+      const SomeDependency = {
+        doSomething(message) {
+          console.log('依赖做的事情:', message);
+        },
+      };
+      (function (window, dependency) {
+        function log(message) {
+          dependency.doSomething(message);
+          console.log('[IIFE依赖注入LOG]:', message);
+        }
+        window.Logger = {
+          log,
+        };
+      })(window, SomeDependency);
+      Logger.log('IIFE依赖注入的日志消息');
+
+      // 现代替代方案
+      class LoggerModern {
+        constructor(dependency) {}
+        log(message) {
+          this.dependency.doSomething(message);
+          console.log('[现代依赖注入LOG]:', message);
+        }
+      }
+      const logger = new LoggerModern(SomeDependency);
+      logger.log('现代依赖注入的日志消息');
+    </script>
+  </body>
+</html>
