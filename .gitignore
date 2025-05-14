@@ -18,7 +18,7 @@ out/
 .cache/
 .yarn/cache
 .pnpm-store/
-
+coverage
 # 测试和日志相关
 coverage/
 jest-results.json
