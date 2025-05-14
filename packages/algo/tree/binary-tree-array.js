@@ -106,17 +106,5 @@ function demo(params) {
   let newPerson = increaseAge(person);
   console.log('在调用函数之后，原始的 person 对象是：', person);
   console.log('函数返回的新对象是：', newPerson);
-
-  // 数组案例
-  function modifyArray(arr) {
-    arr = [5, 6, 7];
-    return arr;
-  }
-
-  let myArray = [1, 2, 3];
-  let newArray = modifyArray(myArray);
-  // 表明本质上 js还是按照值传递
-  console.log(myArray); // 输出: [1, 2, 3]
-  console.log(newArray); // 输出: [5, 6, 7]
 }
 // demo();
