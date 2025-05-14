@@ -1,4 +1,4 @@
-import { checkNumber, processArray } from '../demo-test';
+import { checkNumber, processArray } from '../z-demo/demo-test';
 
 describe('分支条件测试', () => {
   describe('checkNumber 函数测试', () => {
