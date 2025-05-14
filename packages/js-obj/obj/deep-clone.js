@@ -1,22 +1,16 @@
 function deepClone(obj) {
-  // 非对象的情况 | 数组的情况和对象的情况
-  if (typeof obj !== 'object' || obj === null) {
-    return obj;
-  }
-  let clone = {};
-  if (Array.isArray(obj)) {
-    clone = [];
-    obj.forEach((element) => {
-      clone.push(deepClone(element));
-    });
-  } else {
-    clone = {};
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        clone[key] = obj[key];
-      }
+  if (typeof obj !== 'object' || obj === null) return obj;
+
+  // 直接根据类型初始化
+  const clone = Array.isArray(obj) ? [] : {};
+
+  // 统一处理属性复制（对象和数组通用）
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      clone[key] = deepClone(obj[key]); // 递归克隆
     }
   }
+
   return clone;
 }
 

@@ -19,11 +19,10 @@
 function binarySearch(arr, target) {
   let left = 0;
   let right = arr.length - 1;
-  arr = [];
-  target = 1;
   while (left <= right) {
     let mid = left + Math.floor((right - left) / 2);
     if (arr[mid] === target) {
+      // 提前返回但是不能确认当前元素就是一个个出现的目标元素
       return mid;
     }
     if (arr[mid] < target) {
@@ -34,4 +33,48 @@ function binarySearch(arr, target) {
   }
   return -1;
 }
+function binarySearch1(arr, target) {
+  // 左闭右开
+  let left = 0;
+  let right = arr.length;
+
+  while (left < right) {
+    let mid = left + Math.floor((right - left) / 2);
+
+    if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  if (left === arr.length) {
+    return -1;
+  }
+  return left;
+}
+// 如果确定目标值存在于数组中，可以使用双指针夹逼法，在找到任意匹配位置后快速向左右扩展：
+function binarySearch2(arr, target) {
+  let left = 0;
+  let right = arr.length - 1; // 注意这里改为闭区间
+
+  while (left <= right) {
+    let mid = left + Math.floor((right - left) / 2);
+
+    if (arr[mid] === target) {
+      // 找到任意匹配后，向左扩展到第一个出现的位置
+      while (mid > 0 && arr[mid - 1] === target) {
+        mid--;
+      }
+      return mid;
+    }
+    if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return -1;
+}
 binarySearch([1, 2, 3, 4, 5], 1);
+console.log('🚀 ~ binarySearch([1, 2, 3, 4, 5], 1):', binarySearch1([1, 2, 3, 4, 5], 4));

@@ -27,7 +27,7 @@ console.log('🚀 ~ enumable:', enumable);
 
 // 会获取对象和原型链的所有可枚举属性
 for (const key in p) {
-  console.log('🚀 ~ key:', key);
+  console.log('🚀 ~ 11111key:', key);
 }
 // 如果想只获取当前对象的所有可枚举属性
 for (const key in p) {

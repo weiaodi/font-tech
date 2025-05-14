@@ -10,33 +10,28 @@
  * @return {number}
  */
 let lengthOfLIS = function (nums) {
-  if (nums.length === 0) {
-    return 0;
-  }
-  //   维护一个 递增数组,遍历原数组,尝试把当前元素放到递增数组中的合适位置
-  const ascend = [];
-  for (let i = 0; i < nums.length; i++) {
-    // 利用二分查找判断 当前元素应该放入的位置
+  // 构建一个有序递增数组,通过遍历,采取二分查找将数据填入有序数组中
+  let increaseArr = [];
+  for (let index = 0; index < nums.length; index++) {
+    //  构建左闭右开区间来查询数据
     let left = 0,
-      right = ascend.length;
+      right = increaseArr.length;
     while (left < right) {
-      const mid = Math.floor((left + right) / 2);
-      if (nums[i] > ascend[mid]) {
-        //   如果当前的元素小于基准值则可以缩小范围,继续查找升序列表中的元素
+      let mid = Math.floor(left + (right - left) / 2);
+      if (nums[index] > increaseArr[mid]) {
         left = mid + 1;
       } else {
         right = mid;
       }
     }
-    if (left === ascend.length) {
-      // 说明升序列表中所有的元素都小于当前元素,则追加到升序列表中
-      ascend.push(nums[i]);
+
+    if (left === increaseArr.length) {
+      increaseArr.push(nums[index]);
     } else {
-      // 二分查找的结束情况为left===right 也就是说 left指向在升序列表中第一个大于当前元素的元素
-      ascend[left] = nums[i];
+      // [left, right)  而终止条件为  left=right 指明当前元素是大于或者等于 increaseArr[left]中的数据
+      increaseArr[left] = nums[index];
     }
   }
-
-  return ascend.length;
+  return increaseArr.length;
 };
 // @lc code=end
