@@ -1,23 +1,26 @@
 class EventEmitter {
   constructor() {
-    this.tasks = {};
+    // 用于存储事件及其对应的回调函数列表
+    this.events = new Map();
   }
-  on(eventName, callback) {
-    if (!this.tasks[eventName]) {
-      this.tasks[eventName] = [];
+  on(message, callback) {
+    if (!this.events.has(message)) {
+      this.events.set(message, []);
     }
-    this.tasks[eventName].push(callback);
+    this.events.get(message).push(callback);
   }
-  emit(eventName, ...args) {
-    if (this.tasks[eventName]) {
-      this.tasks[eventName].forEach((callback) => {
-        callback(...args);
-      });
+  emit(message, ...args) {
+    if (!this.events.has(message)) {
+      return new Error('event not defined');
     }
+    this.events.get(message).forEach((fn) => {
+      fn(...args);
+    });
   }
-  off(eventName, callback) {
-    if (this.tasks[eventName]) {
-      this.tasks[eventName] = this.tasks[eventName].filter((fn) => fn !== callback);
+  off(message, callback) {
+    if (this.events.has(message)) {
+      let callbacks = this.events.get(message).filter((fn) => fn !== callback);
+      this.events.set(message, callbacks);
     }
   }
 }
@@ -32,12 +35,9 @@ const callback = (message) => {
 
 // 订阅事件
 emitter.on('message', callback);
-
 // 发布事件
-emitter.emit('message', 'Hello, World!');
-
+emitter.emit('message', 'data');
 // 取消订阅
 emitter.off('message', callback);
-
 // 再次发布事件，此时不会触发回调函数
-emitter.emit('message', '再次发送消息');
+emitter.emit('message', 'data111');

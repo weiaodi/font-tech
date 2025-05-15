@@ -1,7 +1,7 @@
 import './db1.js';
 import './db2.js';
 
-const counter = require('./counter');
+const counter = require('./counter.js');
 
 console.log('初始 count:', counter.count); // 0
 counter.increment(); // 内部 count: 1
