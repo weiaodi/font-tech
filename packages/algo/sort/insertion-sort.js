@@ -1,12 +1,13 @@
 function insertionSort(arr) {
-  for (let index = 1; index < arr.length; index++) {
-    let curSort = arr[index];
-    let lastSorted = index - 1;
-    while (lastSorted && curSort < arr[lastSorted]) {
-      arr[lastSorted + 1] = arr[lastSorted];
-      lastSorted--;
+  //  选取一个基准元素,尝试将他插入到前面的有序队列中
+  for (let cur = 1; cur < arr.length; cur++) {
+    let base = arr[cur];
+    let sorted = cur - 1;
+    while (sorted >= 0 && base < arr[sorted]) {
+      arr[sorted + 1] = arr[sorted];
+      sorted--;
     }
-    arr[lastSorted + 1] = curSort;
+    arr[sorted + 1] = base;
   }
   return arr;
 }

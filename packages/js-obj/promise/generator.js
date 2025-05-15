@@ -1,52 +1,49 @@
-// 模拟异步操作
-function asyncTask(delay, value) {
-  return new Promise((resolve) => {
+function muYouAsync(gen) {
+  // 接受一个Generator函数作为参数
+  // 返回一个函数
+  return function () {
+    // 返回一个promise
+    return new Promise((resolve, reject) => {
+      // 执行Generator函数
+      let g = gen();
+      const next = (context) => {
+        let res;
+        try {
+          res = g.next(context);
+        } catch (error) {
+          reject(error);
+        }
+        if (res.done) {
+          // 这时候说明已经是完成了，需要返回结果
+          resolve(res.value);
+        } else {
+          // 继续执行next函数,传入执行结果
+          return Promise.resolve(res.value).then(
+            (val) => next(val),
+            (err) => next(err),
+          );
+        }
+      };
+      next();
+    });
+  };
+}
+
+const getFetch = (nums) =>
+  new Promise((resolve) => {
     setTimeout(() => {
-      resolve(value);
-    }, delay);
+      resolve(nums + 1);
+    }, 1000);
   });
+
+function* gen() {
+  let res1 = yield getFetch(1);
+  let res2 = yield getFetch(res1);
+  let res3 = yield getFetch(res2);
+  return res3;
 }
 
-// 生成器函数
-function* generate() {
-  const result1 = yield asyncTask(1000, 'First task completed');
-  console.log(result1);
-  const result2 = yield asyncTask(1500, 'Second task completed');
-  console.log(result2);
-  return 'All tasks completed';
-}
-// 创建生成器实例
-const iterator = generate();
-let iteration = iterator.next();
-
-while (!iteration.done) {
-  console.log(iteration);
-  // 处理异步任务结果
-  iteration = iterator.next();
-}
-// 执行器函数，模拟 async/await 行为
-function runGenerator(gen) {
-  const iterator = gen();
-
-  function iterate(iteration) {
-    if (iteration.done) {
-      return Promise.resolve(iteration.value);
-    }
-
-    const promise = iteration.value;
-    return promise
-      .then((result) => {
-        return iterate(iterator.next(result));
-      })
-      .catch((error) => {
-        return iterate(iterator.throw(error));
-      });
-  }
-
-  return iterate(iterator.next());
-}
-
-// 调用执行器函数来运行生成器
-runGenerator(generate).then((finalResult) => {
-  console.log(finalResult);
-});
+const asyncGen = muYouAsync(gen);
+asyncGen().then((res) => {
+  console.log(res);
+}); // 4
