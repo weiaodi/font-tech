@@ -4,9 +4,8 @@
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
-    "prebuild": "babel src/index.js --out-file dist/demo.transpiled.js",
-    "build": "rollup -c",
-    "start": "node dist/bundle.js"
+    "build": "rollup -c && babel dist/bundle.js --out-file  dist/bundle.transpiled.js",
+    "start": "node dist/bundle.transpiled.js"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +14,12 @@
     "log-decorator": "workspace:*"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.2",
-    "@babel/core": "^7.23.2",
-    "@babel/plugin-proposal-decorators": "^7.23.2",
-    "@rollup/plugin-commonjs": "^25.0.5",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "rollup": "^4.11.0"
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "rollup": "^4.41.0"
   },
   "type": "module"
 }
