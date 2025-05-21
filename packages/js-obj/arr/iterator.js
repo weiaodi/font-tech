@@ -55,3 +55,6 @@ const demo1 = {
     };
   },
 };
+for (const [index, value] of fruits.entries()) {
+  console.log(index, value);
+}

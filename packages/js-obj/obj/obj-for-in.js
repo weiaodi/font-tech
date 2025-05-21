@@ -14,9 +14,8 @@ class Pig extends Animal {
 // sound：这是 Animal 对象原型链上的可枚举属性,非实例对象的。
 Animal.prototype.sound = 'Roar';
 Pig.prototype.jump = 'iump';
-const a = new Animal('测试宠物');
 const p = new Pig('偷吃');
-// 只会获取可枚举的属性
+// 返回**自身可枚举属性**的键数组（不包含继承属性）。
 let keysp = Object.keys(p);
 let valuesp = Object.values(p);
 let enumable = Object.entries(p);
@@ -35,3 +34,17 @@ for (const key in p) {
     console.log('🚀 ~ key objOwn:', key);
   }
 }
+
+console.log('🚀 ~ Object.getOwnPropertyNames(p):', Object.getOwnPropertyNames(p));
+
+const obj = {
+  a: 1,
+  b: 2,
+};
+Object.defineProperty(obj, 'c', {
+  value: 3,
+  enumerable: false, // 不可枚举
+});
+
+console.log(Object.getOwnPropertyNames(obj)); // ['a', 'b', 'c']
+console.log(Object.keys(obj)); // ['a', 'b']（仅可枚举属性）

@@ -1,1 +1,5 @@
-# **/packages/code-questions
+# 依赖和构建相关
+**/node_modules/
+dist/
+build/
+out/
