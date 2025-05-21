@@ -4,13 +4,16 @@
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
-    "build": "babel dist/bundle.js --out-file  dist/bundle.transpiled.js",
+    "build": "rollup -c && babel dist/bundle.js --out-file  dist/bundle.transpiled.js",
     "start": "node dist/bundle.transpiled.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.27.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/runtime": "^7.27.1",
     "log-decorator": "workspace:*"
   },
   "devDependencies": {
