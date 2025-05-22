@@ -22,27 +22,3 @@ bar1();
 动态作用域执行过程
 执行 test 函数，首先从函数内部查询 val 变量，如果没有，就从调用函数的作用域，即 bar 函数的作用域内部查找变量 val，所以打印结果 2
 */
-function foo() {
-  if (true) {
-    var number = 5;
-    console.log(number);
-  }
-
-  console.log(number);
-}
-
-function bar() {
-  if (true) {
-    let number = 5;
-    console.log(number);
-  }
-
-  console.log(number);
-}
-
-foo(); // 5 和 5
-bar(); // 5 和 ReferenceError: number is not defined
-// let 声明的变量的作用域只有外层块，而不是整个外层函数。
-// var 声明的变量的作用域是整个封闭函数。
-
-// 为了保持兼容性，var命令和function命令声明的全局变量，依旧是顶层对象的属性；另一方面规定，let命令、const命令、class命令声明的全局变量，不属于顶层对象的属性。
