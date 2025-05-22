@@ -40,11 +40,15 @@ console.log('🚀 ~ Object.getOwnPropertyNames(p):', Object.getOwnPropertyNames(
 const obj = {
   a: 1,
   b: 2,
+  c: 111,
 };
 Object.defineProperty(obj, 'c', {
   value: 3,
   enumerable: false, // 不可枚举
 });
+for (const key in obj) {
+  console.log('🚀 ~ key objOwn:', key);
+}
 
 console.log(Object.getOwnPropertyNames(obj)); // ['a', 'b', 'c']
 console.log(Object.keys(obj)); // ['a', 'b']（仅可枚举属性）
