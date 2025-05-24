@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>交互延迟感知体验</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: #3b82f6;
+        --color-secondary: #10b981;
+        --color-danger: #ef4444;
+        --color-neutral: #6b7280;
+        --font-inter: 'Inter', sans-serif;
+      }
+
+      @utility smooth-transition {
+        transition: all 0.3s ease-in-out;
+      }
+
+      @utility delayed-animation {
+        animation: delayedAppear 0.5s ease-out;
+      }
+
+      @keyframes delayedAppear {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .notification {
+        animation: fadeInOut 3s ease-in-out;
+      }
+
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        10% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        90% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body class="font-inter bg-gray-50 min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+      <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">交互延迟感知体验</h1>
+        <p class="text-gray-600">通过调节延迟滑块，感受不同场景下10ms与100ms的交互差异</p>
+      </header>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3v-1h6v1a3 3 0 01-3 3z"
+            ></path>
+          </svg>
+          延迟控制
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <label for="instant-feedback" class="block text-sm font-medium text-gray-700 mb-1"
+              >瞬时反馈延迟 (按钮点击、输入框):</label
+            >
+            <input
+              type="range"
+              id="instant-feedback"
+              min="10"
+              max="1000"
+              value="10"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>10ms</span>
+              <span id="instant-value">10ms</span>
+              <span>1000ms</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="async-operation" class="block text-sm font-medium text-gray-700 mb-1"
+              >异步操作延迟 (页面加载、数据请求):</label
+            >
+            <input
+              type="range"
+              id="async-operation"
+              min="10"
+              max="1000"
+              value="100"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>10ms</span>
+              <span id="async-value">100ms</span>
+              <span>1000ms</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="periodic-update" class="block text-sm font-medium text-gray-700 mb-1"
+              >周期性更新延迟 (列表滚动、动画):</label
+            >
+            <input
+              type="range"
+              id="periodic-update"
+              min="10"
+              max="200"
+              value="10"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>10ms</span>
+              <span id="periodic-value">10ms</span>
+              <span>200ms</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="notification-delay" class="block text-sm font-medium text-gray-700 mb-1"
+              >通知提示延迟 (非关键反馈):</label
+            >
+            <input
+              type="range"
+              id="notification-delay"
+              min="10"
+              max="500"
+              value="100"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>10ms</span>
+              <span id="notification-value">100ms</span>
+              <span>500ms</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- 瞬时反馈场景 -->
+        <div class="bg-white rounded-xl shadow-md p-6 delayed-animation">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center text-primary">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 2a6 6 0 016 6v3.586l.707.707A1 1 0 0118 14v-3a6 6 0 00-6-6H6a6 6 0 00-6 6v3a1 1 0 01-.293.707L0 11.586V8a6 6 0 016-6h4zm0 12a3 3 0 003-3v-1h-6v1a3 3 0 003 3z"
+              ></path>
+            </svg>
+            瞬时反馈场景 (按钮点击)
+          </h2>
+          <p class="text-gray-600 mb-4">点击按钮，感受不同延迟下的响应速度差异</p>
+          <div class="space-y-3">
+            <button
+              id="instant-button"
+              class="w-full bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg smooth-transition"
+            >
+              点击我 (瞬时反馈)
+            </button>
+            <div
+              id="instant-feedback-display"
+              class="h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700"
+            >
+              等待点击...
+            </div>
+          </div>
+        </div>
+
+        <!-- 异步操作场景 -->
+        <div class="bg-white rounded-xl shadow-md p-6 delayed-animation" style="animation-delay: 0.1s">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center text-secondary">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 19a9 9 0 100-18 9 9 0 000 18zm0-16a7 7 0 017 7v3H3v-3a7 7 0 017-7z"></path>
+            </svg>
+            异步操作场景 (数据加载)
+          </h2>
+          <p class="text-gray-600 mb-4">点击加载，观察不同延迟下的加载反馈差异</p>
+          <div class="space-y-3">
+            <button
+              id="async-button"
+              class="w-full bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg smooth-transition"
+            >
+              加载数据 (异步操作)
+            </button>
+            <div id="async-loading" class="hidden items-center justify-center h-10">
+              <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-secondary mr-2"></span>
+              <span>加载中...</span>
+            </div>
+            <div
+              id="async-feedback-display"
+              class="h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700 hidden"
+            >
+              数据加载完成
+            </div>
+          </div>
+        </div>
+
+        <!-- 周期性更新场景 -->
+        <div class="bg-white rounded-xl shadow-md p-6 delayed-animation" style="animation-delay: 0.2s">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center text-danger">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0 4a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+              ></path>
+            </svg>
+            周期性更新场景 (列表滚动)
+          </h2>
+          <p class="text-gray-600 mb-4">拖动滑块，感受不同延迟下的滚动流畅度</p>
+          <div class="relative h-64 border border-gray-200 rounded-lg overflow-auto mb-3">
+            <div id="scroll-container" class="w-full h-max p-4">
+              <!-- 滚动内容将通过JS动态生成 -->
+            </div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-500">
+            <span>流畅 (10ms)</span>
+            <span>卡顿 (100ms+)</span>
+          </div>
+        </div>
+
+        <!-- 非关键反馈场景 -->
+        <div class="bg-white rounded-xl shadow-md p-6 delayed-animation" style="animation-delay: 0.3s">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 2a6 6 0 016 6v3.586l.707.707A1 1 0 0118 14v3a6 6 0 01-6 6H6a6 6 0 01-6-6v-3a1 1 0 01.293-.707L4 11.586V8a6 6 0 016-6zm0 12a3 3 0 003-3V8a1 1 0 00-1-1H7a1 1 0 00-1 1v3a3 3 0 003 3z"
+              ></path>
+            </svg>
+            非关键反馈场景 (通知提示)
+          </h2>
+          <p class="text-gray-600 mb-4">点击发送，观察不同延迟下的通知提示效果</p>
+          <div class="space-y-3">
+            <button
+              id="notification-button"
+              class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg smooth-transition"
+            >
+              发送通知 (非关键反馈)
+            </button>
+            <div id="notification-container" class="h-10"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 mt-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3v-1h6v1a3 3 0 01-3 3z"
+            ></path>
+          </svg>
+          交互延迟感知说明
+        </h2>
+        <div class="space-y-4 text-gray-600">
+          <div>
+            <p class="font-medium text-gray-700 mb-1">瞬时反馈场景</p>
+            <p>
+              10ms延迟接近"无延迟"体验，按钮点击后立即响应；100ms延迟会产生明显的"卡顿感"，用户能感知到操作与反馈之间的间隔。
+            </p>
+          </div>
+          <div>
+            <p class="font-medium text-gray-700 mb-1">异步操作场景</p>
+            <p>由于存在"加载中"的视觉反馈，10ms与100ms的差异会被掩盖，用户更关注的是整体加载完成的结果而非中间延迟。</p>
+          </div>
+          <div>
+            <p class="font-medium text-gray-700 mb-1">周期性更新场景</p>
+            <p>10ms延迟对应100fps的流畅动画；100ms延迟仅10fps，会产生明显的卡顿感，尤其是在滚动或连续动画中。</p>
+          </div>
+          <div>
+            <p class="font-medium text-gray-700 mb-1">非关键反馈场景</p>
+            <p>这类场景的反馈重要性较低，10ms与100ms的延迟差异很可能被用户忽略，优化的性价比相对较低。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./demo.js"></script>
+  </body>
+</html>
