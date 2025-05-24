@@ -17,14 +17,36 @@
  * @return {ListNode}
  */
 let reverseList = function (head) {
-  let prev = null;
-  let cur = head;
-  while (cur !== null) {
-    let next = cur.next;
-    cur.next = prev;
-    prev = cur;
-    cur = next;
+  if (!head || !head.next) {
+    return head;
   }
-  return prev;
+  // eslint-disable-next-line no-undef
+  const dummy = new ListNode(null);
+  dummy.next = head;
+  let cur = head;
+  // dummy>2>1>3>null        1>2>3>null
+  // dummy>3>2>1>null
+  while (cur.next) {
+    const next = cur.next;
+    cur.next = next.next;
+    next.next = dummy.next;
+    dummy.next = next;
+  }
+  return dummy.next;
 };
 // @lc code=end
+let reverseList1 = function (head) {
+  if (!head || !head.next) {
+    return head;
+  }
+  let pre = null;
+  // null   1>2>3>null   null<1<2<3
+  let cur = head;
+  while (cur) {
+    const next = cur.next;
+    cur.next = pre;
+    pre = cur;
+    cur = next;
+  }
+  return pre;
+};
