@@ -55,13 +55,13 @@ const HardMan = function (name) {
 // HardMan('jack');
 // // I am jack
 
-HardMan('jack').rest(1).learn('computer');
+// HardMan('jack').rest(1).learn('computer');
 // I am jack
 // 等待10秒
 // Start learning after 10 seconds
 // Learning computer
 
-// HardMan('jack').restFirst(5).learn('chinese');
+HardMan('jack').restFirst(5).learn('chinese');
 // // 等待5秒
 // // Start learning after 5 seconds
 // // I am jack

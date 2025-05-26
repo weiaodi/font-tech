@@ -11,33 +11,34 @@
  */
 let longestPalindrome = function (s) {
   let n = s.length;
-  let maxlen = 1;
+  const table = Array(n)
+    .fill(0)
+    .map(() => Array(n).fill(false));
   let start = 0;
-  let tables = new Array(n).fill(0).map(() => new Array(n).fill(false));
-  // 长度为1 即xy相等->第i个到第i个 均为回文串
+  let maxLen = 1;
+  // 长度为1,从 i到i都是回文串
   for (let index = 0; index < n; index++) {
-    tables[index][index] = true;
+    table[index][index] = true;
   }
-  // 长度
+  // 可能整个字符串都是回文串
   for (let len = 2; len <= n; len++) {
-    // 长度为2 0-1
+    // 0123      4 -2
     for (let left = 0; left <= n - len; left++) {
-      // 以长度为2,在字符串内部遍历结果
       let right = left + len - 1;
       if (s[left] === s[right]) {
+        // 长度为2  aa  没有边界可以检查,所以需要设置为true
         if (len === 2) {
-          tables[left][right] = true;
+          table[left][right] = true;
         } else {
-          tables[left][right] = tables[left + 1][right - 1];
+          table[left][right] = table[left + 1][right - 1];
         }
       }
-      if (tables[left][right] && len > maxlen) {
+      if (table[left][right] && len > maxLen) {
         start = left;
-        maxlen = len;
+        maxLen = len;
       }
     }
   }
-  // substring截取不含最后的元素
-  return s.substring(start, start + maxlen);
+  return s.substring(start, start + maxLen);
 };
 // @lc code=end
