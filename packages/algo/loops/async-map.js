@@ -1,8 +1,7 @@
 function mapAsync(array, asyncCallback) {
-  const promises = array.map((item, index) => {
-    return asyncCallback(item, index, array);
+  const promises = array.map((item) => {
+    return asyncCallback(item);
   });
-
   return Promise.all(promises);
 }
 

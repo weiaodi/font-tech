@@ -32,7 +32,7 @@ let insertionSortList = function (head) {
       while (pre.next.val <= cur.val) {
         pre = pre.next;
       }
-      // 1246 3  5
+      // 1246/37
       sorted.next = cur.next;
       const next = pre.next;
       pre.next = cur;
