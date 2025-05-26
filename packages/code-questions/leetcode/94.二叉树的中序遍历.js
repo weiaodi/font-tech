@@ -21,16 +21,16 @@ let inorderTraversal = function (root) {
   let result = [];
   let stack = [];
   let cur = root;
-  while (cur || stack.length > 0) {
+  // 1 2>4-5 3
+  while (cur || stack.length) {
     while (cur) {
-      stack.push(cur);
+      stack.push(cur.left);
       cur = cur.left;
     }
     cur = stack.pop();
     result.push(cur.val);
     cur = cur.right;
   }
-  return result;
 };
 // @lc code=end
 let inorderTraversal1 = function (root) {
@@ -39,11 +39,11 @@ let inorderTraversal1 = function (root) {
     return result;
   }
   if (root.left) {
-    result = result.concat(inorderTraversal(root.left));
+    result = result.concat(inorderTraversal1(root.left));
   }
   result.push(root.val);
   if (root.right) {
-    result = result.concat(inorderTraversal(root.right));
+    result = result.concat(inorderTraversal1(root.right));
   }
   return result;
 };
