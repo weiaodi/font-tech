@@ -1,26 +1,82 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      .parent {
-        width: 500px;
-        background-color: lightgray;
-      }
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-      .child {
-        width: 200px;
-        height: 50px;
-        background-color: lightblue;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+  }
 
-  <body>
-    <div class="parent">
-      <div class="child"></div>
-    </div>
-  </body>
-</html>
+  .content {
+    padding-top: 80px; /* 避开顶部导航栏 */
+    padding: 20px;
+    min-height: 2000px; /* 长内容区域 */
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none; /* 默认隐藏 */
+  }
+
+  .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 1001;
+    width: 300px;
+    display: none; /* 默认隐藏 */
+  }
+
+  .show-modal .modal-overlay,
+  .show-modal .modal-content {
+    display: block; /* 显示模态框 */
+  }
+</style>
+
+<header class="navbar">固定导航栏</header>
+
+<div class="content">
+  <button id="open-modal">打开模态框</button>
+  <!-- 长内容 -->
+</div>
+
+<div class="modal-overlay"></div>
+<div class="modal-content">
+  <h2>模态框标题</h2>
+  <p>模态框内容...</p>
+  <button id="close-modal">关闭</button>
+</div>
+
+<script>
+  const openBtn = document.getElementById('open-modal');
+  const closeBtn = document.getElementById('close-modal');
+  const body = document.body;
+
+  openBtn.addEventListener('click', () => {
+    body.classList.add('show-modal');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    body.classList.remove('show-modal');
+  });
+</script>
