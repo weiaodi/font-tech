@@ -6,6 +6,7 @@ function replace(tpl, data) {
     return data[key] !== undefined ? data[key] : match;
   });
 }
+
 function replace1(tpl, data) {
   const regex = /\{([^{}]+)\}/g;
   let result = '';
