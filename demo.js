@@ -1,5 +1,10 @@
-// sticky元素
-// http对头阻塞
-// vue scoped 会渲染子组件的根组件问题
-// vuescoped实现原理
-//
+let a = 'hi, my name is {name}, I am {age} years old, my email is {email}.';
+let b = { name: 'max', age: 12, email: 'max@gmail.com' };
+// 实现这个方法
+function replace(tpl, data) {
+  return tpl.replace(/\{([^{}]+)\}/g, (match, key) => {
+    return data[key] !== undefined ? data[key] : match;
+  });
+}
+console.log('🚀 ~ replace(a, b):', replace(a, b));
+let ss = 'demo';
