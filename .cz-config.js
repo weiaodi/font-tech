@@ -36,7 +36,7 @@ module.exports = {
     // 选择 scope: custom 时会出下面的提示
     // customScope: '请输入自定义的 scope (可选):',
     subject: '填写一个简短精炼的描述语句 (必填):\n',
-    body: '添加一个更加详细的描述，可以附上新增功能的描述或 bug 链接、截图链接 (可选)。使用 "|" 换行:\n',
+    body: '添加一个更加详细的描述',
     confirmCommit: '确认提交?（y/n）',
   },
 
