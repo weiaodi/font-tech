@@ -28,7 +28,6 @@ class LightThemeFactory extends AbstractUIFactory {
     return new LightInput();
   }
 }
-
 // 按钮产品的抽象接口（实际使用中可省略）
 class AbstractButton {
   render() {
