@@ -3,13 +3,15 @@
   border: 2px solid blue;
 }
 
-.child-component {
+// 使用后代选择器穿透子组件样式
+.parent-component .child-component {
   background: yellow !important;
-  .child-title {
-    color: red !important;
-  }
-
-  .child-button {
-    background: green !important;
-  }
 }
+
+.parent-component .child-title {
+  color: red !important;
+}
+
+.parent-component .child-button {
+  background: green !important;
+} 
