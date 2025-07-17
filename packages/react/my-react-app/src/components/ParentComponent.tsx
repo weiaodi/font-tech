@@ -1,6 +1,6 @@
 import React from 'react';
-import ChildComponent from './ChildComponent';
 import './ParentComponent.less';
+import ChildComponent from './ChildComponent';
 
 const ParentComponent: React.FC = () => {
   return (

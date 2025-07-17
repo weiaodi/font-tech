@@ -1,17 +1,15 @@
 .parent-component {
   padding: 20px;
   border: 2px solid blue;
-  
-  // 通过全局 CSS 穿透修改子组件样式
-  :global(.child-component) {
-    background: yellow !important;
-    
-    .child-title {
-      color: red !important;
-    }
-    
-    .child-button {
-      background: green !important;
-    }
+}
+
+.child-component {
+  background: yellow !important;
+  .child-title {
+    color: red !important;
   }
-} 
+
+  .child-button {
+    background: green !important;
+  }
+}
