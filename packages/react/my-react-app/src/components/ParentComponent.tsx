@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './ParentComponent.less';
-import ChildComponent from './ChildComponent';
+import { ChildComponent } from 'react-component-lib';
 
 const ParentComponent: React.FC = () => {
   useEffect(() => {
@@ -41,6 +41,7 @@ const ParentComponent: React.FC = () => {
   return (
     <div className="parent-component">
       <h1>父组件</h1>
+      <p>这个 ChildComponent 来自 react-component-lib 组件库</p>
       <ChildComponent />
     </div>
   );
