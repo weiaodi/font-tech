@@ -1,1 +1,4 @@
-export { default as ChildComponent } from './Button';
+import Card from './Card';
+import ChildComponent from './ChildComponent';
+
+export { Card, ChildComponent };
