@@ -1,0 +1,25 @@
+// 公共样式变量
+@primary-color: #1890ff;
+@border-radius: 4px;
+@font-size-base: 14px;
+@font-size-lg: 16px;
+@font-size-sm: 12px;
+
+// 公共混入
+.common-button() {
+  border: none;
+  border-radius: @border-radius;
+  cursor: pointer;
+  transition: all 0.3s;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.common-card() {
+  border: 1px solid #d9d9d9;
+  border-radius: @border-radius;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+} 
