@@ -6,21 +6,21 @@ type FirstParameter<T> = T extends (arg: infer P, ...rest: any[]) => any ? P : n
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 // 验证器类型
-type Validator<T> = (config: T) => boolean;
+type Validator<T> = (judgements: T) => boolean;
 
 // 函数重载：严格限制最多5个参数
-function validationPipeline<T1 extends Validator<any>>(v1: T1): (config: FirstParameter<T1>) => boolean;
+function validationPipeline<T1 extends Validator<any>>(v1: T1): (judgements: FirstParameter<T1>) => boolean;
 
 function validationPipeline<T1 extends Validator<any>, T2 extends Validator<any>>(
   v1: T1,
   v2: T2,
-): (config: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2>>) => boolean;
+): (judgements: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2>>) => boolean;
 
 function validationPipeline<T1 extends Validator<any>, T2 extends Validator<any>, T3 extends Validator<any>>(
   v1: T1,
   v2: T2,
   v3: T3,
-): (config: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2> & FirstParameter<T3>>) => boolean;
+): (judgements: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2> & FirstParameter<T3>>) => boolean;
 
 function validationPipeline<
   T1 extends Validator<any>,
@@ -33,7 +33,7 @@ function validationPipeline<
   v3: T3,
   v4: T4,
 ): (
-  config: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2> & FirstParameter<T3> & FirstParameter<T4>>,
+  judgements: UnionToIntersection<FirstParameter<T1> & FirstParameter<T2> & FirstParameter<T3> & FirstParameter<T4>>,
 ) => boolean;
 
 function validationPipeline<
@@ -49,31 +49,52 @@ function validationPipeline<
   v4: T4,
   v5: T5,
 ): (
-  config: UnionToIntersection<
+  judgements: UnionToIntersection<
     FirstParameter<T1> & FirstParameter<T2> & FirstParameter<T3> & FirstParameter<T4> & FirstParameter<T5>
   >,
 ) => boolean;
 
-// 实现签名
-function validationPipeline(...validators: Validator<any>[]): (config: any) => boolean {
+// 管道函数，按照写入顺序进行逻辑判断
+function validationPipeline(...validators: Validator<any>[]): (judgements: any) => boolean {
   if (validators.length > 5) {
     throw new Error('validationPipeline 最多支持5个验证器');
   }
 
-  return (config: any) => validators.some((validator) => validator(config));
+  return (judgements: any) => validators.every((validator) => validator(judgements));
 }
 
-// 独立验证函数 - 每个函数可以定义自己需要的参数
-const checkConfig = (config: { config: boolean }) => config.config === true;
-const checkFirstItem = (config: { index: number }) => config.index === 0;
-const checkDefault = (config: { disabled: boolean }) => config.disabled;
+let judgements, index, disabled;
+if (judgements && index && disabled) {
+  // 执行操作
+}
 
-// 使用示例 - 自动推导出配置类型为 { config: boolean; index: number; disabled: boolean }
-const isDisabled = validationPipeline(checkConfig, checkFirstItem, checkDefault);
+// 独立验证函数
+const checkjudgements = (judgements: { judgements: boolean }) => judgements.judgements === true;
+const checkFirstItem = (judgements: { index: number }) => judgements.index === 0;
+const checkDefault = (judgements: { disabled: boolean }) => judgements.disabled;
+const checkDefault1 = (judgements: { disabled1111: boolean }) => judgements.disabled1111;
+// 自动推导出配置类型为 { judgements: boolean; index: number; disabled: boolean }
 
-// 现在可以直接使用，无需显式定义配置类型
-isDisabled({
-  config: false,
+const is = validationPipeline(
+  checkjudgements,
+  checkFirstItem,
+  checkDefault,
+  checkDefault1,
+)({
+  judgements: false,
+  disabled1111: false,
   index: 0,
   disabled: false,
+});
+
+const isDisabled = validationPipeline(
+  (judgements: { judgements: boolean }) => {
+    return judgements.judgements === true;
+  },
+  (judgements: { judgements1: boolean }) => judgements.judgements1 === true,
+  (judgements: { judgements2: boolean }) => judgements.judgements2 === true,
+)({
+  judgements: false,
+  judgements2: false,
+  judgements1: false,
 });
