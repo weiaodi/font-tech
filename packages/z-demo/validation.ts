@@ -5,7 +5,7 @@ type FirstParameter<T> = T extends (arg: infer P, ...rest: any[]) => any ? P : n
 // 辅助类型：合并多个类型为交叉类型
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
-// 验证器类型
+// 验证器函数类型
 type Validator<T> = (judgements: T) => boolean;
 
 // 函数重载：严格限制最多5个参数
@@ -59,22 +59,18 @@ function validationPipeline(...validators: Validator<any>[]): (judgements: any) 
   if (validators.length > 5) {
     throw new Error('validationPipeline 最多支持5个验证器');
   }
-
+  // 这里代表每个函数都需要为true才会返回true 如果需要部分满足可以调整为 validators.some
   return (judgements: any) => validators.every((validator) => validator(judgements));
 }
 
-let judgements, index, disabled;
-if (judgements && index && disabled) {
-  // 执行操作
-}
-
-// 独立验证函数
-const checkjudgements = (judgements: { judgements: boolean }) => judgements.judgements === true;
+// 验证器函数
+const checkjudgements = (judgements: { judgements: boolean; judgements1: boolean }) =>
+  judgements.judgements && judgements.judgements1 === true;
 const checkFirstItem = (judgements: { index: number }) => judgements.index === 0;
 const checkDefault = (judgements: { disabled: boolean }) => judgements.disabled;
 const checkDefault1 = (judgements: { disabled1111: boolean }) => judgements.disabled1111;
-// 自动推导出配置类型为 { judgements: boolean; index: number; disabled: boolean }
 
+// 自动推导出配置类型为 '{ judgements: boolean; judgements1: boolean; } & { index: number; } & { disabled: boolean; } & { disabled1111: boolean; }'
 const is = validationPipeline(
   checkjudgements,
   checkFirstItem,
@@ -82,19 +78,8 @@ const is = validationPipeline(
   checkDefault1,
 )({
   judgements: false,
-  disabled1111: false,
+  judgements1: false,
   index: 0,
   disabled: false,
-});
-
-const isDisabled = validationPipeline(
-  (judgements: { judgements: boolean }) => {
-    return judgements.judgements === true;
-  },
-  (judgements: { judgements1: boolean }) => judgements.judgements1 === true,
-  (judgements: { judgements2: boolean }) => judgements.judgements2 === true,
-)({
-  judgements: false,
-  judgements2: false,
-  judgements1: false,
+  disabled1111: false,
 });
