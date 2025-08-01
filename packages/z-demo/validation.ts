@@ -5,7 +5,7 @@ type FirstParameter<T> = T extends (arg: infer P, ...rest: any[]) => any ? P : n
 // 辅助类型：合并多个类型为交叉类型
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
-// 验证器函数类型
+// 验证器函数 类型
 type Validator<T> = (judgements: T) => boolean;
 
 // 函数重载：严格限制最多5个参数
