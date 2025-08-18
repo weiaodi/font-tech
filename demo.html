@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>重新渲染时移除并添加事件监听</title>
+    <style>
+      .wei {
+        padding: 8px;
+        border: 1px solid #ccc;
+        margin: 4px;
+        cursor: pointer;
+      }
+      #updateBtn {
+        padding: 8px 16px;
+        margin: 10px 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent">
+      <button id="updateBtn">触发重渲染（先删后加监听）</button>
+      <p>重渲染次数: <span id="count">0</span></p>
+      <div id="childrenContainer"></div>
+    </div>
+
+    <script>
+      // 数据
+      const data = [
+        { id: '1', name: 'Item1' },
+        { id: '2', name: 'Item2' },
+        { id: '3', name: 'Item3' },
+      ];
+
+      // 状态
+      let renderCount = 0;
+      const clickStates = {};
+      data.forEach((item) => (clickStates[item.id] = false));
+
+      // 子组件点击处理函数（独立声明，便于移除时匹配引用）
+      function handleItemClick(e) {
+        const id = e.currentTarget.dataset.id;
+        clickStates[id] = true;
+        e.currentTarget.style.color = 'red';
+        console.log(`子组件 ${id} 被点击`);
+      }
+
+      // 渲染函数：先移除旧监听→清空DOM→创建新元素→绑定新监听
+      function renderChildren() {
+        const container = document.getElementById('childrenContainer');
+
+        // 1. 移除所有旧子组件的事件监听（关键步骤）
+        const oldItems = container.querySelectorAll('.wei');
+        oldItems.forEach((item) => {
+          item.removeEventListener('click', handleItemClick);
+          console.log(`移除子组件 ${item.dataset.id} 的事件监听`);
+        });
+
+        // 2. 清空容器（销毁旧DOM）
+        container.innerHTML = '';
+
+        // 3. 创建新子组件并绑定新监听
+        data.forEach((item) => {
+          const div = document.createElement('div');
+          div.className = 'wei';
+          div.dataset.id = item.id;
+          div.textContent = item.name;
+          // 保持点击状态
+          if (clickStates[item.id]) {
+            div.style.color = 'red';
+          }
+
+          // 绑定新的事件监听
+          div.addEventListener('click', handleItemClick);
+          console.log(`为子组件 ${item.id} 添加事件监听`);
+
+          container.appendChild(div);
+        });
+
+        // 更新计数
+        renderCount++;
+        document.getElementById('count').textContent = renderCount;
+      }
+
+      // 父组件按钮点击事件：触发重渲染
+      document.getElementById('updateBtn').addEventListener('click', () => {
+        console.log('===== 开始重渲染 =====');
+        renderChildren();
+        console.log('===== 重渲染完成 =====');
+      });
+
+      // 初始渲染
+      renderChildren();
+    </script>
+  </body>
+</html>

@@ -1,17 +1,23 @@
-interface User {
-  name: string;
-  age?: number;
-}
+// function isStringNormal(test: any): boolean {
+//   return typeof test === 'string'; // TypeScript 不分析这个逻辑
+// }
 
-function addAge(user: User) {
-  // ❌ 通过索引签名动态添加属性，控制流分析无法跟踪
-  user.age = 25;
+// function printValue(x: string | number) {
+//   if (isStringNormal(x)) {
+//     // ❌ TypeScript 不知道 x 是 string，因为 isStringNormal 返回 boolean
 
-  // user.age 类型仍为 number | undefined
-}
+//     x.toUpperCase(); // 错误：number 没有 toUpperCase
+//   }
+// }
 
-function printAge(user: User) {
-  addAge(user);
-  // ❌ 虽然 addAge 确保了 age 存在，但 TypeScript 不知道
-  console.log(user.age.toFixed(0)); // 编译错误：可能为 undefined
-}
+// function isString(test: any): test is string {
+//   return typeof test === 'string'; // 实现必须与声明一致
+// }
+
+// function printValue(x: string | number) {
+//   if (isString(x)) {
+//     // ✅ TypeScript 知道 x 是 string，因为 isString 的返回类型是 test is string
+
+//     x.toUpperCase(); // 安全
+//   }
+// }
