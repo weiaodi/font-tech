@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export const SFCSheetItem = ({ id, name }: { id: string; name: string }) => {
   const domRef = useRef<HTMLDivElement>(null);
