@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <button id="arrBtn">操作数组</button>
+    <script>
+      // 内部定义初始空数组
+      let myArray = [1, 2, 3];
+      // 获取按钮元素
+      const arrBtn = document.getElementById('arrBtn');
+
+      // 按钮点击事件
+      arrBtn.addEventListener('click', function () {
+        // 1. 打印修改前的当前数组
+        console.log('修改前的数组:', myArray);
+        // 2. 向数组添加一个子项（这里用当前时间戳作为唯一元素，避免重复）
+        myArray.push('添加元素');
+        // 3. 打印修改后的数组
+        console.log('修改后的数组:', myArray);
+      });
+    </script>
+  </body>
+</html>
