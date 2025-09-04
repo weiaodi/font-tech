@@ -10,11 +10,7 @@ type ClassMethodNames<T> = {
 // 装饰器工厂，严格约束参数类型
 function disposeDecorator<T>(isSingleton: boolean, accessMethodName: ClassMethodNames<T>) {
   // 返回实际的装饰器函数，明确只能装饰dispose方法
-  return function (
-    target: T,
-    propertyKey: 'dispose', // 明确只能装饰dispose方法
-    descriptor: PropertyDescriptor,
-  ): PropertyDescriptor {
+  return function (target: T, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     if (propertyKey !== 'dispose') {
       throw new Error('此装饰器只能应用在dispose方法上');
     }
@@ -72,23 +68,6 @@ class ResourceManager {
     return `资源状态: ${this.resource ? '存在' : '已释放'}`;
   }
 }
-
-// 错误示例（会在编译时报错）：
-// class Test {
-//   @disposeDecorator<Test>(true, 'dispose')  // 错误：不能使用dispose作为访问方法
-//   dispose() {}
-// }
-
-// class Test2 {
-//   @disposeDecorator<Test2>(true, 'nonexistent')  // 错误：方法不存在
-//   dispose() {}
-// }
-
-// class Test3 {
-//   @disposeDecorator<Test3>(true, 'someMethod')  // 错误：someMethod不是方法
-//   dispose() {}
-//   someMethod = "not a function";
-// }
 
 // 测试
 const manager = new ResourceManager();

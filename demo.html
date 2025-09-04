@@ -2,95 +2,227 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>重新渲染时移除并添加事件监听</title>
+    <title>Sigma.js + Graphology 增强图谱示例</title>
+    <!-- 引入 Graphology（图数据处理核心库） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
+    <!-- 引入 Graphology 的力导向布局插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology-layout-force/0.2.11/graphology-layout-force.umd.min.js"></script>
+    <!-- 引入 Sigma.js（渲染引擎，依赖 Graphology） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
+    <!-- 引入 Sigma.js 与 Graphology 的绑定插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/plugins/sigma.plugins.graphology.min.js"></script>
+    <!-- 引入 Sigma.js 拖拽插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/plugins/sigma.plugins.dragNodes.min.js"></script>
+
     <style>
-      .wei {
-        padding: 8px;
-        border: 1px solid #ccc;
-        margin: 4px;
-        cursor: pointer;
+      #graph-container {
+        width: 1000px;
+        height: 700px;
+        margin: 20px auto;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        background: #fafafa;
+        position: relative;
       }
-      #updateBtn {
-        padding: 8px 16px;
-        margin: 10px 0;
+
+      .graph-controls {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 10px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .control-btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        margin-left: 5px;
         cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .control-btn:hover {
+        background: #2980b9;
+      }
+
+      .node-info {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        max-width: 250px;
+        display: none;
+      }
+
+      .node-info h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 16px;
+      }
+
+      .node-info p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 14px;
       }
     </style>
   </head>
   <body>
-    <div id="parent">
-      <button id="updateBtn">触发重渲染（先删后加监听）</button>
-      <p>重渲染次数: <span id="count">0</span></p>
-      <div id="childrenContainer"></div>
+    <div id="graph-container">
+      <div class="graph-controls">
+        <button id="start-layout" class="control-btn">开始布局</button>
+        <button id="stop-layout" class="control-btn">停止布局</button>
+        <button id="reset-view" class="control-btn">重置视图</button>
+      </div>
+      <div class="node-info" id="node-info">
+        <h3 id="info-title"></h3>
+        <p><strong>ID:</strong> <span id="info-id"></span></p>
+        <p><strong>关联强度:</strong> <span id="info-size"></span></p>
+      </div>
     </div>
 
     <script>
-      // 数据
-      const data = [
-        { id: '1', name: 'Item1' },
-        { id: '2', name: 'Item2' },
-        { id: '3', name: 'Item3' },
-      ];
+      // 1. 创建 Graphology 图实例
+      const graph = new graphology.Graph();
 
-      // 状态
-      let renderCount = 0;
-      const clickStates = {};
-      data.forEach((item) => (clickStates[item.id] = false));
+      // 2. 向图中添加节点（模拟 Obsidian 笔记）
+      graph.addNode('note1', {
+        label: 'JavaScript 基础',
+        size: 15,
+        color: '#3498db',
+      });
+      graph.addNode('note2', { label: '变量声明', size: 10, color: '#2ecc71' });
+      graph.addNode('note3', { label: '函数定义', size: 10, color: '#2ecc71' });
+      graph.addNode('note4', { label: '箭头函数', size: 8, color: '#2ecc71' });
+      graph.addNode('note5', { label: '作用域', size: 12, color: '#e74c3c' });
+      graph.addNode('note6', { label: '闭包', size: 9, color: '#f39c12' });
+      graph.addNode('note7', { label: '孤立笔记', size: 7, color: '#9b59b6' });
 
-      // 子组件点击处理函数（独立声明，便于移除时匹配引用）
-      function handleItemClick(e) {
-        const id = e.currentTarget.dataset.id;
-        clickStates[id] = true;
-        e.currentTarget.style.color = 'red';
-        console.log(`子组件 ${id} 被点击`);
-      }
+      // 3. 添加边（模拟双向链接）
+      graph.addEdge('note1', 'note2');
+      graph.addEdge('note1', 'note3');
+      graph.addEdge('note3', 'note4');
+      graph.addEdge('note5', 'note6');
+      graph.addEdge('note1', 'note5');
+      graph.addEdge('note2', 'note5');
 
-      // 渲染函数：先移除旧监听→清空DOM→创建新元素→绑定新监听
-      function renderChildren() {
-        const container = document.getElementById('childrenContainer');
-
-        // 1. 移除所有旧子组件的事件监听（关键步骤）
-        const oldItems = container.querySelectorAll('.wei');
-        oldItems.forEach((item) => {
-          item.removeEventListener('click', handleItemClick);
-          console.log(`移除子组件 ${item.dataset.id} 的事件监听`);
-        });
-
-        // 2. 清空容器（销毁旧DOM）
-        container.innerHTML = '';
-
-        // 3. 创建新子组件并绑定新监听
-        data.forEach((item) => {
-          const div = document.createElement('div');
-          div.className = 'wei';
-          div.dataset.id = item.id;
-          div.textContent = item.name;
-          // 保持点击状态
-          if (clickStates[item.id]) {
-            div.style.color = 'red';
-          }
-
-          // 绑定新的事件监听
-          div.addEventListener('click', handleItemClick);
-          console.log(`为子组件 ${item.id} 添加事件监听`);
-
-          container.appendChild(div);
-        });
-
-        // 更新计数
-        renderCount++;
-        document.getElementById('count').textContent = renderCount;
-      }
-
-      // 父组件按钮点击事件：触发重渲染
-      document.getElementById('updateBtn').addEventListener('click', () => {
-        console.log('===== 开始重渲染 =====');
-        renderChildren();
-        console.log('===== 重渲染完成 =====');
+      // 4. 初始化 Sigma 渲染器
+      const container = document.getElementById('graph-container');
+      const renderer = new sigma.Sigma(graph, container, {
+        settings: {
+          defaultNodeColor: '#ccc',
+          edgeColor: 'source',
+          enableHovering: true,
+          hoverFontSize: 14,
+          enableEdgeHovering: true,
+          edgeHoverColor: '#000',
+          zoomMin: 0.3,
+          zoomMax: 3,
+          enableWheelZoom: true,
+          enableClickEvents: true,
+        },
       });
 
-      // 初始渲染
-      renderChildren();
+      // 5. 配置并启动力导向布局
+      const forceLayout = graphologyLayoutForce.layout(graph, {
+        center: 0.8, // 向心力强度
+        repulsion: 200, // 节点间排斥力
+        edgeLength: 100, // 边的理想长度
+        iterations: 1000, // 迭代次数
+      });
+
+      // 初始化节点拖拽功能
+      const dragNodes = sigma.plugins.dragNodes(renderer, renderer.renderers[0]);
+      dragNodes.bind('startdrag', (event) => {
+        // 拖拽开始时暂停布局
+        forceLayout.stop();
+      });
+
+      // 动画控制变量
+      let animationFrame;
+      let isLayoutRunning = false;
+
+      // 布局动画函数
+      function animate() {
+        if (!isLayoutRunning) return;
+
+        forceLayout.step();
+        renderer.refresh();
+        animationFrame = requestAnimationFrame(animate);
+      }
+
+      // 开始布局
+      function startLayout() {
+        if (!isLayoutRunning) {
+          isLayoutRunning = true;
+          forceLayout.start();
+          animate();
+        }
+      }
+
+      // 停止布局
+      function stopLayout() {
+        if (isLayoutRunning) {
+          isLayoutRunning = false;
+          forceLayout.stop();
+          cancelAnimationFrame(animationFrame);
+        }
+      }
+
+      // 重置视图
+      function resetView() {
+        renderer.getCamera().goTo({ x: 0, y: 0, angle: 0, ratio: 1 });
+        renderer.refresh();
+      }
+
+      // 绑定控制按钮事件
+      document.getElementById('start-layout').addEventListener('click', startLayout);
+      document.getElementById('stop-layout').addEventListener('click', stopLayout);
+      document.getElementById('reset-view').addEventListener('click', resetView);
+
+      // 节点点击交互 - 显示详细信息
+      renderer.on('clickNode', (e) => {
+        const node = graph.getNodeAttributes(e.node);
+        const infoBox = document.getElementById('node-info');
+
+        document.getElementById('info-title').textContent = node.label;
+        document.getElementById('info-id').textContent = e.node;
+        document.getElementById('info-size').textContent = node.size;
+
+        infoBox.style.display = 'block';
+      });
+
+      // 点击空白处隐藏信息框
+      renderer.on('clickStage', () => {
+        document.getElementById('node-info').style.display = 'none';
+      });
+
+      // 节点悬停效果
+      renderer.on('overNode', (e) => {
+        container.style.cursor = 'pointer';
+      });
+
+      renderer.on('outNode', () => {
+        container.style.cursor = 'default';
+      });
+
+      // 初始启动布局
+      startLayout();
+
+      // 5秒后自动停止布局（可选）
+      setTimeout(() => {
+        stopLayout();
+      }, 5000);
     </script>
   </body>
 </html>

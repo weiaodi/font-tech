@@ -1,77 +1,44 @@
-import { useState, useEffect, useRef } from 'react';
-import { SFCSheetItem } from './demo';
-
-const SheetListAuto = () => {
-  const [count, setCount] = useState(0);
-  const [isRunning, setIsRunning] = useState(false); // 控制自动更新状态
-  const intervalRef = useRef<number | null>(null);
-  const [sheets] = useState([
-    { id: '1', name: 'Sheet1' },
-    { id: '2', name: 'Sheet2' },
-    { id: '3', name: 'Sheet3' },
-    { id: '4', name: 'Sheet4' },
-    { id: '5', name: 'Sheet1' },
-    { id: '6', name: 'Sheet2' },
-    { id: '7', name: 'Sheet3' },
-    { id: '8', name: 'Sheet4' },
-  ]);
-
-  // 保持内部定义以触发组件频繁卸载/重建
-  const DragItem = (props: { id: string; name: string }) => <SFCSheetItem {...props} />;
-
-  // 自动更新逻辑：每100毫秒重渲染一次
-  useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = window.setInterval(() => {
-        setCount((prev) => prev + 1);
-      }, 100);
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+import { Tldraw } from 'tldraw';
+import type { CustomEmbedDefinition } from 'tldraw';
+import 'tldraw/tldraw.css';
+// 仅定义掘金文章的嵌入规则（核心配置）
+const juejinEmbed: CustomEmbedDefinition = {
+  type: 'juejin-post', // 唯一标识：掘金文章嵌入类型
+  title: '掘金文章', // 嵌入弹窗中显示的名称（用户可识别）
+  hostnames: ['juejin.cn'], // 锁定域名：仅处理掘金链接
+  minWidth: 800, // 嵌入框最小宽度（防止过小导致内容错乱）
+  minHeight: 600, // 嵌入框最小高度（适配文章基本阅读）
+  width: 800, // 默认宽度（匹配掘金文章阅读体验）
+  height: 600, // 默认高度（容纳大部分文章内容，减少滚动）
+  doesResize: true, // 允许用户拖拽调整嵌入框大小
+  // 普通掘金链接 → 嵌入链接（掘金支持原链接直接嵌入，无需修改）
+  toEmbedUrl: (url) => {
+    const urlObj = new URL(url);
+    // 精准匹配掘金文章路径：/post/纯数字ID（如 /post/7257708221360111675）
+    const isJuejinPost = urlObj.pathname.match(/^\/post\/(\d+)$/);
+    if (isJuejinPost) {
+      return url; // 直接返回原链接（掘金支持原链接嵌入）
     }
-
-    // 组件卸载时清理定时器
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isRunning]);
-
-  // 统计DOM节点状态
-  useEffect(() => {
-    const logDomStats = () => {
-      const allWeiNodes = document.querySelectorAll('.wei');
-      const detachedNodes = Array.from(allWeiNodes).filter((node) => !document.body.contains(node));
-
-      console.log(`--- 第${count}次更新统计 ---`);
-      console.log(`总.wei节点数: ${allWeiNodes.length}`);
-      console.log(`游离.wei节点数: ${detachedNodes.length}`);
-      console.log('------------------------');
-    };
-
-    // 每次count更新后统计（延迟确保DOM已更新）
-    setTimeout(logDomStats, 0);
-  }, [count]);
-
-  // 切换自动更新状态
-  const toggleRunning = () => {
-    setIsRunning((prev) => !prev);
-  };
-
-  return (
-    <div>
-      <button onClick={toggleRunning} style={{ padding: '8px 16px', fontSize: '16px' }}>
-        {isRunning ? '暂停更新' : '继续更新'}
-      </button>
-      <p>自动更新次数: {count}</p>
-      <p>状态: {isRunning ? '正在自动更新...' : '已暂停'}</p>
-      <div style={{ marginTop: '16px' }}>
-        {sheets.map((sheet) => (
-          <DragItem key={sheet.id} {...sheet} />
-        ))}
-      </div>
-    </div>
-  );
+  },
+  // 嵌入链接 → 普通链接（反向转换，直接返回原链接即可）
+  fromEmbedUrl: (url) => {
+    const urlObj = new URL(url);
+    if (urlObj.pathname.match(/^\/post\/(\d+)$/)) {
+      return url;
+    }
+  },
+  // 嵌入弹窗中显示的掘金官方图标（清晰识别）
+  icon: 'https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web//static/favicons/favicon-32x32.png',
 };
 
-export default SheetListAuto;
+// 仅传入掘金嵌入规则（无其他无关规则）
+const embeds = [juejinEmbed];
+
+export default function JuejinOnlyEmbed() {
+  return (
+    // 固定定位确保白板占满屏幕
+    <div style={{ position: 'fixed', inset: 0 }}>
+      <Tldraw embeds={embeds} />
+    </div>
+  );
+}
