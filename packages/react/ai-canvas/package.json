@@ -4,7 +4,6 @@
   "description": "React project with TypeScript and Less support",
   "main": "main.tsx",
   "scripts": {
-    "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "dev": "vite"

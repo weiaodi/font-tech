@@ -11,6 +11,156 @@ interface TextElement {
 // 定义排序模式的类型
 type SortMode = 'horizontal' | 'vertical';
 
+// -------------- 具体的元素绘制函数 --------------
+/**
+ * 绘制单个文本元素（包含方框和文字）
+ * @param ctx - Canvas 2D上下文
+ * @param element - 文本元素
+ * @param index - 元素索引（用于生成唯一颜色）
+ */
+const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement, index: number) => {
+  const { text, x, y } = element;
+  if (x === undefined || y === undefined) return;
+
+  // 设置字体
+  ctx.font = '24px Arial';
+
+  // 测量文本宽度
+  const textMetrics = ctx.measureText(text);
+  const textWidth = textMetrics.width;
+  const textHeight = 30; // 估算的文本高度
+
+  // 计算方框位置和大小（文本周围留出一些空间）
+  const padding = 15;
+  const rectX = x - textWidth / 2 - padding;
+  const rectY = y - textHeight / 2 - padding;
+  const rectWidth = textWidth + padding * 2;
+  const rectHeight = textHeight + padding * 2;
+
+  // 绘制方框（每个框使用不同的颜色）
+  const hue = (index * 60) % 360;
+  ctx.strokeStyle = `hsl(${hue}, 70%, 50%)`;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+
+  // 绘制文字（居中）
+  ctx.fillStyle = '#333';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+};
+
+/**
+ * 绘制所有文本元素
+ * @param canvasRef - Canvas元素引用
+ * @param elements - 文本元素数组
+ */
+const drawAllElements = (canvasRef: React.RefObject<HTMLCanvasElement>, elements: TextElement[]) => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // 清空画布
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 绘制所有元素
+  elements.forEach((element, index) => {
+    drawTextElement(ctx, element, index);
+  });
+};
+
+// -------------- 具体的排序方式函数 --------------
+/**
+ * 横向排列元素
+ * @param canvas - Canvas元素
+ * @param elements - 文本元素数组
+ * @returns 排序后的元素数组
+ */
+const arrangeHorizontally = (canvas: HTMLCanvasElement, elements: TextElement[]): TextElement[] => {
+  const newElements = [...elements];
+  const padding = 30;
+  const textHeight = 30;
+  const boxPadding = 15;
+  const totalBoxHeight = textHeight + boxPadding * 2;
+  const startY = (canvas.height - totalBoxHeight) / 2 + totalBoxHeight / 2;
+  const availableWidth = canvas.width - padding * 2;
+  const elementWidth = availableWidth / newElements.length;
+
+  newElements.forEach((element, index) => {
+    const x = padding + index * elementWidth + elementWidth / 2;
+    element.x = x;
+    element.y = startY;
+  });
+
+  return newElements;
+};
+
+/**
+ * 竖向排列元素
+ * @param canvas - Canvas元素
+ * @param elements - 文本元素数组
+ * @returns 排序后的元素数组
+ */
+const arrangeVertically = (canvas: HTMLCanvasElement, elements: TextElement[]): TextElement[] => {
+  const newElements = [...elements];
+  const padding = 30;
+  const startX = canvas.width / 2;
+  const availableHeight = canvas.height - padding * 2;
+  const elementHeight = availableHeight / newElements.length;
+
+  newElements.forEach((element, index) => {
+    const y = padding + index * elementHeight + elementHeight / 2;
+    element.x = startX;
+    element.y = y;
+  });
+
+  return newElements;
+};
+
+/**
+ * 根据排序模式排列元素
+ * @param canvasRef - Canvas元素引用
+ * @param elements - 文本元素数组
+ * @param mode - 排序模式
+ * @returns 排序后的元素数组
+ */
+const arrangeElementsByMode = (
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+  elements: TextElement[],
+  mode: SortMode,
+): TextElement[] => {
+  const canvas = canvasRef.current;
+  if (!canvas || elements.length === 0) return [...elements];
+
+  switch (mode) {
+    case 'horizontal':
+      return arrangeHorizontally(canvas, elements);
+    case 'vertical':
+      return arrangeVertically(canvas, elements);
+    default:
+      return [...elements];
+  }
+};
+
+// -------------- 辅助函数 --------------
+/**
+ * 调整Canvas尺寸
+ * @param canvasRef - Canvas元素引用
+ */
+const resizeCanvas = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  const container = canvas.parentElement;
+  if (container) {
+    canvas.width = container.clientWidth;
+    canvas.height = 500;
+  }
+};
+
+// -------------- 组件核心逻辑 --------------
 const DrawingBoard: React.FC = () => {
   // Canvas相关引用和状态
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,118 +168,29 @@ const DrawingBoard: React.FC = () => {
   const [currentSortMode, setCurrentSortMode] = useState<SortMode>('horizontal');
   const [inputText, setInputText] = useState<string>('');
 
-  // 初始化Canvas
+  // 初始化Canvas和窗口大小监听
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    resizeCanvas(canvasRef);
+    drawAllElements(canvasRef, textElements);
 
-    const resizeCanvas = () => {
-      const container = canvas.parentElement;
-      if (container) {
-        canvas.width = container.clientWidth;
-        canvas.height = 500;
-        redrawAllElements();
-      }
+    const handleResize = () => {
+      resizeCanvas(canvasRef);
+      const rearrangedElements = arrangeElementsByMode(canvasRef, textElements, currentSortMode);
+      setTextElements(rearrangedElements);
+      drawAllElements(canvasRef, rearrangedElements);
     };
 
-    // 初始化尺寸
-    resizeCanvas();
-    // 监听窗口大小变化
-    window.addEventListener('resize', resizeCanvas);
-
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [textElements]);
+  }, []);
 
-  // 绘制所有元素
-  const redrawAllElements = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // 清空画布
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 绘制所有文本框
-    textElements.forEach((element, index) => {
-      const { text, x, y } = element;
-      if (x === undefined || y === undefined) return;
-
-      // 设置字体
-      ctx.font = '24px Arial';
-
-      // 测量文本宽度
-      const textMetrics = ctx.measureText(text);
-      const textWidth = textMetrics.width;
-      const textHeight = 30; // 估算的文本高度
-
-      // 计算方框位置和大小（文本周围留出一些空间）
-      const padding = 15;
-      const rectX = x - textWidth / 2 - padding;
-      const rectY = y - textHeight / 2 - padding;
-      const rectWidth = textWidth + padding * 2;
-      const rectHeight = textHeight + padding * 2;
-
-      // 绘制方框（每个框使用不同的颜色）
-      const hue = (index * 60) % 360;
-      ctx.strokeStyle = `hsl(${hue}, 70%, 50%)`;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-
-      // 绘制文字（居中）
-      ctx.fillStyle = '#333';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, x, y);
-    });
-  };
-
-  // 排列元素
-  const arrangeElements = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || textElements.length === 0) return;
-
-    const newElements: TextElement[] = [...textElements];
-
-    if (currentSortMode === 'horizontal') {
-      const padding = 30;
-      const textHeight = 30;
-      const boxPadding = 15;
-      const totalBoxHeight = textHeight + boxPadding * 2;
-      const startY = (canvas.height - totalBoxHeight) / 2 + totalBoxHeight / 2;
-      const availableWidth = canvas.width - padding * 2;
-      const elementWidth = availableWidth / newElements.length;
-
-      newElements.forEach((element, index) => {
-        const x = padding + index * elementWidth + elementWidth / 2;
-        element.x = x;
-        element.y = startY;
-      });
-    } else {
-      const padding = 30;
-      const textHeight = 30;
-      const boxPadding = 15;
-      const totalBoxHeight = textHeight + boxPadding * 2;
-      const startX = canvas.width / 2;
-      const availableHeight = canvas.height - padding * 2;
-      const elementHeight = availableHeight / newElements.length;
-
-      newElements.forEach((element, index) => {
-        const y = padding + index * elementHeight + elementHeight / 2;
-        element.x = startX;
-        element.y = y;
-      });
-    }
-
-    setTextElements(newElements);
-  };
-
-  // 当排序方式改变或元素变化时重新排列
+  // 当排序方式改变或元素变化时重新排列和绘制
   useEffect(() => {
-    arrangeElements();
+    const rearrangedElements = arrangeElementsByMode(canvasRef, textElements, currentSortMode);
+    setTextElements(rearrangedElements);
+    drawAllElements(canvasRef, rearrangedElements);
   }, [currentSortMode, textElements.length]);
 
   // 添加随机文字
@@ -140,25 +201,22 @@ const DrawingBoard: React.FC = () => {
       text += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    setTextElements([...textElements, { text }]);
+    setTextElements((prev) => [...prev, { text }]);
   };
 
   // 发送输入的文字
   const sendText = () => {
     const trimmedText = inputText.trim();
-    if (trimmedText) {
-      // 发送逻辑预留位置
-      // 您可以在这里编写自己的发送逻辑
+    if (trimmedText && trimmedText.length <= 10) {
+      // TODO 添加ai接口
 
-      // 默认行为：添加到画布
-      setTextElements([...textElements, { text: trimmedText }]);
+      setTextElements((prev) => [...prev, { text: trimmedText }]);
       setInputText('');
     }
   };
 
   // 处理输入变化
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 限制最多输入10个字符
     if (e.target.value.length <= 10) {
       setInputText(e.target.value);
     }
@@ -194,6 +252,7 @@ const DrawingBoard: React.FC = () => {
             onKeyPress={handleKeyPress}
             placeholder="输入文字内容（最多10字）"
             className="text-input"
+            maxLength={10}
           />
           <button onClick={sendText} className="btn send-btn">
             <i className="fa fa-paper-plane"></i> 发送
