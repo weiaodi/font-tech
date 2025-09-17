@@ -139,7 +139,7 @@ const arrangeGrid = (canvas: HTMLCanvasElement, elements: TextElement[]): TextEl
 export const arrangeElementsByMode = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   elements: TextElement[],
-  mode: SortMode,
+  mode: string,
 ): TextElement[] => {
   const canvas = canvasRef.current;
   if (!canvas || elements.length === 0) return [...elements];

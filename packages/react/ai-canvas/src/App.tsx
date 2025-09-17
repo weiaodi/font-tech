@@ -1,67 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './index.less';
 import { arrangeElementsByMode } from './utils/arrange';
-
-// -------------- 具体的元素绘制函数 --------------
-/**
- * 绘制单个文本元素（包含方框和文字）
- * @param ctx - Canvas 2D上下文
- * @param element - 文本元素
- * @param index - 元素索引（用于生成唯一颜色）
- */
-const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement) => {
-  const { text, x, y, size = 16 } = element;
-  if (x === undefined || y === undefined) return;
-
-  // 设置文本大小
-  ctx.font = `${size}px Arial`;
-
-  // 测量文本宽度
-  const textMetrics = ctx.measureText(text);
-  const textWidth = textMetrics.width;
-  const textHeight = size * 1.2; // 基于字体大小估算高度
-
-  // 计算方框位置和大小（文本周围留出一些空间）
-  const padding = 15;
-  const rectX = x - textWidth / 2 - padding;
-  const rectY = y - textHeight / 2 - padding;
-  const rectWidth = textWidth + padding * 2;
-  const rectHeight = textHeight + padding * 2;
-
-  // 绘制方框
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-  ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
-  ctx.strokeStyle = '#333';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-
-  // 绘制文字（居中）
-  ctx.fillStyle = '#e80a0aff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, x, y);
-};
-
-/**
- * 绘制所有文本元素
- * @param canvasRef - Canvas元素引用
- * @param elements - 文本元素数组
- */
-const drawAllElements = (canvasRef: React.RefObject<HTMLCanvasElement>, elements: TextElement[]) => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  // 清空画布
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // 绘制所有元素
-  elements.forEach((element) => {
-    drawTextElement(ctx, element);
-  });
-};
+import { drawAllElements } from './utils/draw';
 
 // -------------- 辅助函数 --------------
 /**
@@ -75,7 +15,7 @@ const resizeCanvas = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
   const container = canvas.parentElement;
   if (container) {
     canvas.width = container.clientWidth;
-    canvas.height = 500;
+    canvas.height = 900;
   }
 };
 
@@ -84,7 +24,7 @@ const DrawingBoard: React.FC = () => {
   // Canvas相关引用和状态
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [textElements, setTextElements] = useState<TextElement[]>([]);
-  const [currentSortMode, setCurrentSortMode] = useState<SortMode>('horizontal');
+  const [currentSortMode, setCurrentSortMode] = useState<string>('horizontal');
   const [inputText, setInputText] = useState<string>('');
 
   // 初始化Canvas和窗口大小监听
@@ -114,12 +54,7 @@ const DrawingBoard: React.FC = () => {
 
   // 添加随机文字
   const addRandomText = () => {
-    const chars = '一二三四五六七八九十甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥';
-    let text = '';
-    for (let i = 0; i < 10; i++) {
-      text += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
+    let text = '一二三四五六七八九十甲乙丙丁/n戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥';
     setTextElements((prev) => [...prev, { text }]);
   };
 
@@ -128,9 +63,6 @@ const DrawingBoard: React.FC = () => {
     const trimmedText = inputText.trim();
     if (trimmedText && trimmedText.length <= 10) {
       // TODO 添加ai接口
-
-      setTextElements((prev) => [...prev, { text: trimmedText }]);
-      setInputText('');
     }
   };
 
@@ -141,20 +73,8 @@ const DrawingBoard: React.FC = () => {
     }
   };
 
-  // 处理键盘回车
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      sendText();
-    }
-  };
-
-  // 清除画布
-  const clearCanvas = () => {
-    setTextElements([]);
-  };
-
   // 切换排序方式
-  const toggleSortMode = (mode: SortMode) => {
+  const toggleSortMode = (mode: string) => {
     setCurrentSortMode(mode);
   };
 
@@ -168,7 +88,6 @@ const DrawingBoard: React.FC = () => {
             type="text"
             value={inputText}
             onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
             placeholder="输入文字内容（最多10字）"
             className="text-input"
             maxLength={10}
@@ -208,10 +127,6 @@ const DrawingBoard: React.FC = () => {
             <i className="fa fa-th"></i> 田字格
           </button>
         </div>
-
-        <button onClick={clearCanvas} className="btn clear-btn">
-          <i className="fa fa-trash"></i> 清除画布
-        </button>
       </div>
 
       <div className="canvas-container">
