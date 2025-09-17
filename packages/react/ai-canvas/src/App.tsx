@@ -1,15 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './index.less';
-
-// 定义文本元素的类型
-interface TextElement {
-  text: string;
-  x?: number;
-  y?: number;
-}
-
-// 定义排序模式的类型
-type SortMode = 'horizontal' | 'vertical';
+import { arrangeElementsByMode } from './utils/arrange';
 
 // -------------- 具体的元素绘制函数 --------------
 /**
@@ -19,13 +10,16 @@ type SortMode = 'horizontal' | 'vertical';
  * @param index - 元素索引（用于生成唯一颜色）
  */
 const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement) => {
-  const { text, x, y } = element;
+  const { text, x, y, size = 16 } = element;
   if (x === undefined || y === undefined) return;
+
+  // 设置文本大小
+  ctx.font = `${size}px Arial`;
 
   // 测量文本宽度
   const textMetrics = ctx.measureText(text);
   const textWidth = textMetrics.width;
-  const textHeight = 30; // 估算的文本高度
+  const textHeight = size * 1.2; // 基于字体大小估算高度
 
   // 计算方框位置和大小（文本周围留出一些空间）
   const padding = 15;
@@ -34,6 +28,10 @@ const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement) =>
   const rectWidth = textWidth + padding * 2;
   const rectHeight = textHeight + padding * 2;
 
+  // 绘制方框
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+  ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+  ctx.strokeStyle = '#333';
   ctx.lineWidth = 2;
   ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
 
@@ -63,79 +61,6 @@ const drawAllElements = (canvasRef: React.RefObject<HTMLCanvasElement>, elements
   elements.forEach((element) => {
     drawTextElement(ctx, element);
   });
-};
-
-// -------------- 具体的排序方式函数 --------------
-/**
- * 横向排列元素
- * @param canvas - Canvas元素
- * @param elements - 文本元素数组
- * @returns 排序后的元素数组
- */
-const arrangeHorizontally = (canvas: HTMLCanvasElement, elements: TextElement[]): TextElement[] => {
-  const newElements = [...elements];
-  const padding = 30;
-  const textHeight = 30;
-  const boxPadding = 15;
-  const totalBoxHeight = textHeight + boxPadding * 2;
-  const startY = (canvas.height - totalBoxHeight) / 2 + totalBoxHeight / 2;
-  const availableWidth = canvas.width - padding * 2;
-  const elementWidth = availableWidth / newElements.length;
-
-  newElements.forEach((element, index) => {
-    const x = padding + index * elementWidth + elementWidth / 2;
-    element.x = x;
-    element.y = startY;
-  });
-
-  return newElements;
-};
-
-/**
- * 竖向排列元素
- * @param canvas - Canvas元素
- * @param elements - 文本元素数组
- * @returns 排序后的元素数组
- */
-const arrangeVertically = (canvas: HTMLCanvasElement, elements: TextElement[]): TextElement[] => {
-  const newElements = [...elements];
-  const padding = 30;
-  const startX = canvas.width / 2;
-  const availableHeight = canvas.height - padding * 2;
-  const elementHeight = availableHeight / newElements.length;
-
-  newElements.forEach((element, index) => {
-    const y = padding + index * elementHeight + elementHeight / 2;
-    element.x = startX;
-    element.y = y;
-  });
-
-  return newElements;
-};
-
-/**
- * 根据排序模式排列元素
- * @param canvasRef - Canvas元素引用
- * @param elements - 文本元素数组
- * @param mode - 排序模式
- * @returns 排序后的元素数组
- */
-const arrangeElementsByMode = (
-  canvasRef: React.RefObject<HTMLCanvasElement>,
-  elements: TextElement[],
-  mode: SortMode,
-): TextElement[] => {
-  const canvas = canvasRef.current;
-  if (!canvas || elements.length === 0) return [...elements];
-
-  switch (mode) {
-    case 'horizontal':
-      return arrangeHorizontally(canvas, elements);
-    case 'vertical':
-      return arrangeVertically(canvas, elements);
-    default:
-      return [...elements];
-  }
 };
 
 // -------------- 辅助函数 --------------
@@ -269,6 +194,18 @@ const DrawingBoard: React.FC = () => {
             className={`btn sort-btn ${currentSortMode === 'vertical' ? 'active' : ''}`}
           >
             <i className="fa fa-arrows-v"></i> 竖向
+          </button>
+          <button
+            onClick={() => toggleSortMode('pyramid')}
+            className={`btn sort-btn ${currentSortMode === 'pyramid' ? 'active' : ''}`}
+          >
+            <i className="fa fa-caret-down"></i> 倒金字塔
+          </button>
+          <button
+            onClick={() => toggleSortMode('grid')}
+            className={`btn sort-btn ${currentSortMode === 'grid' ? 'active' : ''}`}
+          >
+            <i className="fa fa-th"></i> 田字格
           </button>
         </div>
 

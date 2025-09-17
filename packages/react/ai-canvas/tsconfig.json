@@ -14,8 +14,20 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    // 关键修复：将 typeRoots 移入 compilerOptions 内部
+    "typeRoots": [
+      "./node_modules/@types", // 第三方库类型（如 React、Node）
+      "./src/types" // 自定义全局类型目录
+    ],
+    // 可选：留空表示自动加载 typeRoots 下的所有类型（推荐）
+    "types": []
   },
-  "include": ["src"],
+  // 确保 include 覆盖所有需要扫描的文件（包括自定义类型文件）
+  "include": [
+    "src/**/*", // 业务代码
+    "src/types/**/*.d.ts" // 自定义类型文件（如果放在 src/types 下）
+    // 如果 globals.d.ts 在根目录，保留 "globals.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
