@@ -18,12 +18,9 @@ type SortMode = 'horizontal' | 'vertical';
  * @param element - 文本元素
  * @param index - 元素索引（用于生成唯一颜色）
  */
-const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement, index: number) => {
+const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement) => {
   const { text, x, y } = element;
   if (x === undefined || y === undefined) return;
-
-  // 设置字体
-  ctx.font = '24px Arial';
 
   // 测量文本宽度
   const textMetrics = ctx.measureText(text);
@@ -37,14 +34,11 @@ const drawTextElement = (ctx: CanvasRenderingContext2D, element: TextElement, in
   const rectWidth = textWidth + padding * 2;
   const rectHeight = textHeight + padding * 2;
 
-  // 绘制方框（每个框使用不同的颜色）
-  const hue = (index * 60) % 360;
-  ctx.strokeStyle = `hsl(${hue}, 70%, 50%)`;
   ctx.lineWidth = 2;
   ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
 
   // 绘制文字（居中）
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#e80a0aff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(text, x, y);
@@ -66,8 +60,8 @@ const drawAllElements = (canvasRef: React.RefObject<HTMLCanvasElement>, elements
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // 绘制所有元素
-  elements.forEach((element, index) => {
-    drawTextElement(ctx, element, index);
+  elements.forEach((element) => {
+    drawTextElement(ctx, element);
   });
 };
 
