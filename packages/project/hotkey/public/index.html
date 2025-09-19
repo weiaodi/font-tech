@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotkeys 按键监听示例</title>
+    <style>
+      /* 简单样式，让页面更易读 */
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 0 20px;
+        text-align: center;
+      }
+      .key-display {
+        margin: 30px 0;
+        padding: 20px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .key-tag {
+        padding: 8px 16px;
+        background-color: #4285f4;
+        color: white;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .info {
+        color: #666;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+      .modifier-status {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hotkeys 按键监听演示</h1>
+    <p>按下任意键或组合键（如 Ctrl+A、Shift+B），下方将显示当前按下的键：</p>
+
+    <!-- 显示当前按下的键 -->
+    <div class="key-display" id="keyDisplay">
+      <span>未按下任何键</span>
+    </div>
+
+    <!-- 显示修饰键（Ctrl/Shift/Alt/Meta）状态 -->
+    <div class="modifier-status">
+      <div>Ctrl: <span id="ctrlStatus">未按下</span></div>
+      <div>Shift: <span id="shiftStatus">未按下</span></div>
+      <div>Alt: <span id="altStatus">未按下</span></div>
+      <div>Meta: <span id="metaStatus">未按下</span></div>
+    </div>
+
+    <p class="info">提示：点击页面后再按键，确保页面获取焦点</p>
+
+    <!-- 引入转换后的 hotkeys-js（注意：请替换为你的实际文件路径） -->
+    <script type="module">
+      // 1. 导入 hotkeys 核心（替换为你的 TS 编译后文件路径，或直接引入 TS 模块）
+      import hotkeys from './hotkeys.js'; // 若使用 TS，需确保已编译为 JS，或配置浏览器支持 TS
+
+      // 2. 获取页面元素
+      const keyDisplay = document.getElementById('keyDisplay');
+      const ctrlStatus = document.getElementById('ctrlStatus');
+      const shiftStatus = document.getElementById('shiftStatus');
+      const altStatus = document.getElementById('altStatus');
+      const metaStatus = document.getElementById('metaStatus');
+
+      // 3. 实时更新按下的键（使用 setInterval 轮询，因为按键状态是动态变化的）
+      setInterval(() => {
+        // 获取当前按下的键（字符串形式，如 ['ctrl', 'a']）
+        const pressedKeys = hotkeys.getPressedKeyString();
+
+        // 更新按键显示区域
+        if (pressedKeys.length === 0) {
+          keyDisplay.innerHTML = '<span>未按下任何键</span>';
+        } else {
+          // 将每个键转为标签样式
+          const keyTags = pressedKeys.map((key) => `<span class="key-tag">${key}</span>`).join('');
+          keyDisplay.innerHTML = keyTags;
+        }
+
+        // 更新修饰键状态（使用 isPressed 方法判断单个键是否按下）
+        ctrlStatus.textContent = hotkeys.isPressed('ctrl') ? '已按下' : '未按下';
+        shiftStatus.textContent = hotkeys.isPressed('shift') ? '已按下' : '未按下';
+        altStatus.textContent = hotkeys.isPressed('alt') ? '已按下' : '未按下';
+        metaStatus.textContent = hotkeys.isPressed('meta') ? '已按下' : '未按下';
+      }, 50); // 每 50ms 更新一次，确保实时性
+
+      // 4. （可选）注册一个自定义快捷键示例（Ctrl+K）
+      hotkeys('ctrl+k', (event) => {
+        event.preventDefault(); // 阻止默认行为（如浏览器搜索）
+        alert('你按下了 Ctrl+K 快捷键！');
+      });
+    </script>
+  </body>
+</html>
