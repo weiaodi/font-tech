@@ -121,10 +121,9 @@ export function getKeybindingScope(): string {
  */
 function getModifierState(event: KeyboardEvent, mod: string) {
   return typeof event.getModifierState === 'function'
-    ? event.getModifierState(mod)
+    ? event.getModifierState(mod) ||
         // 兼容 AltGraph 键：如果当前修饰键是 AltGraph 的别名，且 AltGraph 被按下
-        || (ALT_GRAPH_ALIASES.includes(mod)
-          && event.getModifierState('AltGraph'))
+        (ALT_GRAPH_ALIASES.includes(mod) && event.getModifierState('AltGraph'))
     : false;
 }
 
@@ -178,13 +177,13 @@ export function matchKeyBindingPress(
   return !(
     (key instanceof RegExp
       ? !(key.test(event.key) || key.test(event.code))
-      : key.toUpperCase() !== event.key.toUpperCase() && key !== event.code)
+      : key.toUpperCase() !== event.key.toUpperCase() && key !== event.code) ||
     // 2. 缺少必需的修饰键：按键组合中的修饰键未全部按下
-    || mods.find((mod) => !getModifierState(event, mod))
+    mods.find((mod) => !getModifierState(event, mod)) ||
     // 3. 存在多余的修饰键：
     // 按下了 KEYBINDING_MODIFIER_KEYS 中的修饰键，但该修饰键不在当前按键组合中
     // 且当前按键本身不是该修饰键（避免单独按修饰键时误判）
-    || KEYBINDING_MODIFIER_KEYS.find((mod) => {
+    KEYBINDING_MODIFIER_KEYS.find((mod) => {
       return !mods.includes(mod) && key !== mod && getModifierState(event, mod);
     })
   );

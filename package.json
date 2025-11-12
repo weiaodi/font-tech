@@ -17,10 +17,7 @@
   },
   "lint-staged": {
     "**/*.scss": "stylelint --syntax scss",
-    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
-    "**/*.{js,jsx,tsx,ts,scss,md,json}": [
-      "prettier --write"
-    ]
+    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js"
   },
   "config": {
     "commitizen": {
