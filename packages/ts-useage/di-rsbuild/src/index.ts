@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 import { HotkeyManager } from './manager';
 import { EditorHotkeys } from './handlers/editor-handler';
+// import { registerAllServices } from './di/registry';
 
 function bootstrap() {
   // 初始化热键系统
-  HotkeyManager.init();
-
+  // HotkeyManager.init();
+  // registerAllServices();
   // 注册热键处理类
   HotkeyManager.registerHotkeys(EditorHotkeys);
 

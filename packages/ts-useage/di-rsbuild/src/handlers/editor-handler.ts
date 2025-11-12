@@ -1,6 +1,7 @@
-import { Hotkey, Inject } from '../container';
+import { Hotkey, Inject, Injectable } from '../container';
 import { LoggerService } from '../services';
 
+@Injectable()
 export class EditorHotkeys {
   // 属性注入
   @Inject(LoggerService)
@@ -12,10 +13,11 @@ export class EditorHotkeys {
   }
 
   // 注册单个热键
-  @Hotkey('ctrl+s', {
-    preventDefault: true,
+  @Hotkey('s', {
+    preventDefault: false,
   })
   handleSave(event: KeyboardEvent) {
+    console.log('🚀 ~ EditorHotkeys ~ handleSave ~ event:', this);
     this.logger.log('触发保存操作');
     // 执行保存逻辑...
   }

@@ -1,8 +1,8 @@
+import { Injectable } from '../container';
+
+@Injectable()
 export class LoggerService {
   log(message: string): void {
-    console.log(`[Hotkey] ${message}`);
+    console.log(`日志服务[Hotkey] ${message}`);
   }
 }
-
-// // 2. 注册服务到容器
-// container.provide(LoggerService, LoggerService);

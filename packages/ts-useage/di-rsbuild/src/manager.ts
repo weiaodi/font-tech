@@ -1,36 +1,35 @@
-import { container } from './container';
+import { Container } from './container';
 import { tinykeys } from './tinykeys/tinykeys';
 import { METADATA_KEY, type HotkeyMetadata } from './interfaces';
 
 export class HotkeyManager {
-  private static initialized = false;
+  // private static initialized = false;
 
-  /**
-   * 初始化热键系统
-   * 自动注册所有带有 @Hotkey 装饰器的类
-   */
-  static init(): void {
-    if (this.initialized) return;
+  // /**
+  //  * 初始化热键系统
+  //  * 自动注册所有带有 @Hotkey 装饰器的类
+  //  */
+  // static init(): void {
+  //   if (this.initialized) return;
 
-    this.initialized = true;
-  }
+  //   this.initialized = true;
+  // }
 
   /**
    * 注册指定类的热键
    * @param target 类构造函数
    */
   static registerHotkeys<T>(target: new (...args: any[]) => T): void {
-    const instance = container.get(target);
+    const instance = Container.getInstance().get(target);
     const hotkeysMetadata =
-      (Reflect.getMetadata(METADATA_KEY.HOTKEY, target) as HotkeyMetadata[])
-      || [];
+      (Reflect.getMetadata(METADATA_KEY.HOTKEY, target) as HotkeyMetadata[]) ||
+      [];
 
     hotkeysMetadata.forEach(({ combinations, options, methodKey }) => {
-      const handler = (instance as any)[methodKey] as (
+      const handler = (instance as any)[methodKey].bind(instance) as (
         event: KeyboardEvent,
       ) => void;
 
-      // 注册热键
       tinykeys(window, { [combinations]: handler }, options);
     });
   }

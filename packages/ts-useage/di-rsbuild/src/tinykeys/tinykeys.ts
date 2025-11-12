@@ -229,6 +229,11 @@ export function createKeybindingsHandler(
   // 预处理所有按键绑定：统一格式为 { sequence, options, handler }
   const keyBindings = Object.keys(keyBindingMap).map((key) => {
     const value = keyBindingMap[key];
+    // console.log(
+    //   '🚀 ~ createKeybindingsHandler ~ value:',
+    //   value,
+    //   parseKeybinding(key),
+    // );
 
     const item = {
       sequence: parseKeybinding(key),
