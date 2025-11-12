@@ -42,23 +42,6 @@ type UnbindParam =
       splitKey?: string;
     };
 
-export interface ShortcutItem {
-  /** 快捷键组合字符串（如 'ctrl+s, alt+z, g i'） */
-  shortcut: Shortcut;
-  /** 快捷键触发时的回调函数 */
-  onKeyUp?: HotkeyHandler['method'];
-  onKeyDown?: HotkeyHandler['method'];
-  /** 快捷键注册选项（可选） */
-  options?: {
-    /** 设置快捷键生效的作用域，用于区分不同场景下的快捷键触发范围 */
-    scope?: string;
-    /** 是否在事件捕获阶段（事件从顶层向下传播时）触发监听器，而非冒泡阶段，默认为 false */
-    capture?: boolean;
-    /** 长按是否连续触发，默认为 false */
-    isLongPressTriggered?: boolean;
-  };
-}
-
 export interface HotkeysOption {
   /** 设置快捷键生效的作用域，用于区分不同场景下的快捷键触发范围 */
   scope?: string;
@@ -200,7 +183,7 @@ export class Hotkeys {
   }
 
   /** 注册快捷键 */
-  private register(
+  register(
     key: string,
     option?: string | HotkeysOption | HotkeyHandler['method'],
     method?: HotkeyHandler['method'],
@@ -268,32 +251,6 @@ export class Hotkeys {
     this.bindElementEvents(element, capture);
   }
 
-  registerShortCuts(shortcutItem: ShortcutItem) {
-    const { shortcut, onKeyUp, onKeyDown, options } = shortcutItem;
-
-    if (onKeyDown) {
-      this.register(
-        shortcut,
-        { ...options, keyup: false, keydown: true },
-        (event, handler) => {
-          event.preventDefault();
-          event.stopPropagation();
-          onKeyDown(event, handler);
-        },
-      );
-    }
-    if (onKeyUp) {
-      this.register(
-        shortcut,
-        { ...options, keyup: true, keydown: false },
-        (event, handler) => {
-          event.preventDefault();
-          event.stopPropagation();
-          onKeyUp(event, handler);
-        },
-      );
-    }
-  }
   /** 过滤函数 - 控制快捷键在哪些元素上生效 */
   filter(event: KeyboardEvent): boolean {
     const target =

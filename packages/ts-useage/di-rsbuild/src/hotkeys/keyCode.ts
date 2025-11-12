@@ -160,6 +160,8 @@ const modifierName = Object.fromEntries(
   [K in Modifier]: K;
 };
 
+type SingleChar = string & { length: 1 };
+
 type SingleShortcut =
   | Modifier
   | MainKey
@@ -167,7 +169,7 @@ type SingleShortcut =
   | `${Modifier}+${Modifier}+${MainKey}`
   | `${Modifier}+${string}`
   | `${Modifier}+${Modifier}+${string}`
-  | `${string},${string}`; //  , 用于注册多项快捷键
+  | `${string},${string}`;
 
 type Shortcut = SingleShortcut;
 
