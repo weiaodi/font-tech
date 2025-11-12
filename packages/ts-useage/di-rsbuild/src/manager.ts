@@ -25,12 +25,12 @@ export class HotkeyManager {
       (Reflect.getMetadata(METADATA_KEY.HOTKEY, target) as HotkeyMetadata[]) ||
       [];
 
-    hotkeysMetadata.forEach(({ combinations, options, methodKey }) => {
+    hotkeysMetadata.forEach(({ combination, options, methodKey }) => {
       const handler = (instance as any)[methodKey].bind(instance) as (
         event: KeyboardEvent,
       ) => void;
 
-      tinykeys(window, { [combinations]: handler }, options);
+      tinykeys(window, { [combination]: handler }, options);
     });
   }
 

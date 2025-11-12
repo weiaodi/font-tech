@@ -1,23 +1,17 @@
 import 'reflect-metadata';
 import { HotkeyManager } from './manager';
 import { EditorHotkeys } from './handlers/editor-handler';
+import { Container } from './container';
 // import { registerAllServices } from './di/registry';
 
 function bootstrap() {
-  // 初始化热键系统
-  // HotkeyManager.init();
-  // registerAllServices();
   // 注册热键处理类
   HotkeyManager.registerHotkeys(EditorHotkeys);
-
-  // // 切换作用域（示例）
-  // setTimeout(() => {
-  //   HotkeyManager.setScope('textEditor');
-  //   console.log('热键作用域切换到：textEditor');
-  // }, 3000);
-
-  // // 打印所有热键信息
-  // console.log('已注册热键：', HotkeyManager.getHotkeyInfo());
+  Container.getInstance().getRegisteredHotkeys();
+  console.log(
+    '🚀 ~ bootstrap ~  Container.getInstance().getRegisteredHotkeys():',
+    Container.getInstance().getRegisteredHotkeys(),
+  );
 }
 
 // 启动应用

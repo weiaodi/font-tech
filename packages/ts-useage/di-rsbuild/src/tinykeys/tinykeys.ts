@@ -243,6 +243,7 @@ export function createKeybindingsHandler(
 
     return item;
   });
+  console.log('🚀 ~ createKeybindingsHandler ~ keyBindings:', keyBindings);
 
   const possibleMatches = new Map<KeyBindingPress[], KeyBindingPress[]>(); // 存储正在匹配中的序列
   let timer: number | null = null; // 序列超时计时器

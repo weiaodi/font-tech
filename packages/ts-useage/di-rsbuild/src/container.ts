@@ -2,7 +2,6 @@ import {
   METADATA_KEY,
   type HotkeyCombination,
   type HotkeyMetadata,
-  type HotkeyOptions,
   type InjectionToken,
   type InjectMetadata,
 } from './interfaces';
@@ -87,26 +86,28 @@ export function Inject<T>(
  * @param options 热键配置
  */
 export function Hotkey(
-  combinations: HotkeyCombination,
+  combination: HotkeyCombination,
+  description: string,
+  group: string,
   options: KeyBindingOptions = {},
 ): MethodDecorator {
+  // HotkeyMetadata
   return function (
     target: any,
     methodKey: string | symbol,
     descriptor: PropertyDescriptor,
   ) {
-    // 获取类的热键元数据
     const hotkeysMetadata: HotkeyMetadata[] =
       Reflect.getMetadata(METADATA_KEY.HOTKEY, target.constructor) || [];
 
-    // 添加新的热键元数据
     hotkeysMetadata.push({
-      combinations,
+      description,
+      group,
+      combination,
       options,
       methodKey: methodKey.toString(),
     });
 
-    // 保存热键元数据
     Reflect.defineMetadata(
       METADATA_KEY.HOTKEY,
       hotkeysMetadata,
@@ -127,6 +128,25 @@ export class Container {
       Container.instance = new Container();
     }
     return Container.instance;
+  }
+
+  public getRegisteredHotkeys() {
+    const list = [];
+    for (const [, provider] of this.providers) {
+      if (
+        typeof provider !== 'function' ||
+        !provider.prototype ||
+        !provider.toString().startsWith('class')
+      ) {
+        continue;
+      }
+
+      const classHotkeys = Reflect.getMetadata(METADATA_KEY.HOTKEY, provider);
+      if (!classHotkeys || classHotkeys.length === 0) continue;
+
+      list.push(classHotkeys);
+    }
+    return list;
   }
 
   /**
