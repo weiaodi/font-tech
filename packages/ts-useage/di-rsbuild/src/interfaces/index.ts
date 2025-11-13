@@ -31,8 +31,6 @@ export interface InjectMetadata {
 /** 热键元数据 */
 export interface HotkeyMetadata {
   combination: HotkeyCombination;
-  group: string;
-  description: string;
   options: KeyBindingOptions;
   methodKey: string;
 }

@@ -87,8 +87,7 @@ export function Inject<T>(
  */
 export function Hotkey(
   combination: HotkeyCombination,
-  description: string,
-  group: string,
+
   options: KeyBindingOptions = {},
 ): MethodDecorator {
   // HotkeyMetadata
@@ -97,12 +96,12 @@ export function Hotkey(
     methodKey: string | symbol,
     descriptor: PropertyDescriptor,
   ) {
+    options.currentScope = options.currentScope ?? 'global';
+
     const hotkeysMetadata: HotkeyMetadata[] =
       Reflect.getMetadata(METADATA_KEY.HOTKEY, target.constructor) || [];
 
     hotkeysMetadata.push({
-      description,
-      group,
       combination,
       options,
       methodKey: methodKey.toString(),
@@ -272,11 +271,6 @@ export class Container {
       if (!propertyKey) return;
       const propInstance = this.get(token);
       (instance as any)[propertyKey] = propInstance;
-
-      console.log(
-        '🚀 ~ Container ~ createClassInstance ~ constructorArgs:',
-        (instance as any)[propertyKey],
-      );
     });
   }
 }

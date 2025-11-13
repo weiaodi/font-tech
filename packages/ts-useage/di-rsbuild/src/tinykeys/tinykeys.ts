@@ -2,6 +2,7 @@
  * 单次按键组合（一个完整的按键动作，包含修饰键+普通键）
  * 格式：[修饰键数组, 按键名/正则表达式]
  * 示例：[['Control', 'Shift'], 'a'] → 对应 Ctrl+Shift+A
+ * 示例：[[], 'Shift'] → 对应 Shift
  */
 export type KeyBindingPress = [mods: string[], key: string | RegExp];
 
@@ -29,8 +30,8 @@ export interface KeyBindingHandlerOptions {
   preventDefault?: boolean;
   /** 是否阻止事件冒泡到父元素 */
   stopPropagation?: boolean;
-  /** 作用域标识：仅当当前激活作用域匹配时才触发（默认："default"） */
-  scope?: string;
+  /** 作用域标识：仅当当前激活作用域匹配时才触发（默认："global"） */
+  currentScope?: string;
 }
 
 /**
@@ -94,13 +95,13 @@ let ALT_GRAPH_ALIASES =
 /**
  * 全局作用域状态：记录当前激活的作用域
  */
-let activeScope: string = 'default';
+let activeScope: string = 'global';
 
 /**
  * 设置当前激活的作用域（外部可调用，切换作用域）
- * @param scope 目标作用域标识（空字符串默认切换到 "default"）
+ * @param scope 目标作用域标识（空字符串默认切换到 "global"）
  */
-export function setKeybindingScope(scope: string = 'default') {
+export function setKeybindingScope(scope: string = 'global') {
   activeScope = scope;
 }
 
@@ -145,7 +146,12 @@ export function parseKeybinding(str: string): KeyBindingPress[] {
     .trim() // 去除首尾空格
     .split(' ') // 按空格分割为多个单次按键（press）
     .map((press) => {
+      if (KEYBINDING_MODIFIER_KEYS.includes(press) || press === '$mod') {
+        return [[], press === '$mod' ? MOD : press] as KeyBindingPress;
+      }
+
       let mods = press.split(/\b\+/); // 按 "+" 分割修饰键和普通键（\b 确保单词边界，避免误分割）
+
       let key: string | RegExp = mods.pop() as string; // 最后一个元素是普通键，其余是修饰键
       let match = key.match(/^\((.+)\)$/); // 检测是否为正则表达式格式（如 "(a|b)"）
 
@@ -153,7 +159,6 @@ export function parseKeybinding(str: string): KeyBindingPress[] {
       if (match) {
         key = new RegExp(`^${match[1]}$`); // 包裹 ^ 和 $，确保完全匹配
       }
-
       // 替换修饰键别名：将 $mod 替换为当前平台的默认修饰键（Meta/Control）
       mods = mods.map((mod) => (mod === '$mod' ? MOD : mod));
 
@@ -221,29 +226,23 @@ export function matchKeyBindingPress(
  */
 export function createKeybindingsHandler(
   keyBindingMap: KeyBindingMap,
-  options: KeyBindingHandlerOptions & { scope?: string } = {},
+  options: KeyBindingHandlerOptions = {
+    currentScope: 'global',
+  },
 ): EventListener {
-  // const timeout = options.timeout ?? DEFAULT_TIMEOUT;
-  // const scope = options.scope ?? 'default';
-  const { timeout = DEFAULT_TIMEOUT, scope = 'default' } = options ?? {};
-  // 预处理所有按键绑定：统一格式为 { sequence, options, handler }
+  const { timeout = DEFAULT_TIMEOUT, currentScope } = options ?? {};
+
   const keyBindings = Object.keys(keyBindingMap).map((key) => {
     const value = keyBindingMap[key];
-    // console.log(
-    //   '🚀 ~ createKeybindingsHandler ~ value:',
-    //   value,
-    //   parseKeybinding(key),
-    // );
 
     const item = {
       sequence: parseKeybinding(key),
-
       handler: value,
+      scope: currentScope,
     };
 
     return item;
   });
-  console.log('🚀 ~ createKeybindingsHandler ~ keyBindings:', keyBindings);
 
   const possibleMatches = new Map<KeyBindingPress[], KeyBindingPress[]>(); // 存储正在匹配中的序列
   let timer: number | null = null; // 序列超时计时器
@@ -256,7 +255,7 @@ export function createKeybindingsHandler(
     }
 
     // 遍历所有按键绑定，检查是否匹配
-    keyBindings.forEach(({ sequence, handler }) => {
+    keyBindings.forEach(({ sequence, handler, scope }) => {
       if (scope !== activeScope) {
         return;
       }
@@ -272,7 +271,8 @@ export function createKeybindingsHandler(
 
       if (!matches) {
         // 不匹配：如果当前按下的不是修饰键，移除该序列的匹配进度（避免干扰后续匹配）
-        // 修饰键的按下不应打断序列（如按 Ctrl 后没按 s，再按 Ctrl 仍可继续匹配）
+        // 按 Ctrl 后，按了「非修饰键」（比如 A）—— 清空进度
+        // 按 Ctrl 后，又按了「修饰键」（比如再按一次 Ctrl，或按 Shift）—— 不清空进度
         if (!getModifierState(event, event.key)) {
           possibleMatches.delete(sequence);
         }
@@ -355,12 +355,12 @@ export function tinykeys(
     event = DEFAULT_EVENT,
     capture,
     timeout,
-    scope = 'default',
-  }: KeyBindingOptions = {},
+    currentScope = 'global',
+  }: KeyBindingOptions,
 ): () => void {
   const onKeyEvent = createKeybindingsHandler(keyBindingMap, {
     timeout,
-    scope,
+    currentScope,
   }); // 创建处理器
   target.addEventListener(event, onKeyEvent, capture); // 绑定事件
 

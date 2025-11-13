@@ -3,7 +3,7 @@ import { LoggerService } from '../services';
 import { HotkeyManager } from '../manager';
 
 @Injectable()
-export class EditorHotkeys {
+export class Demo {
   // 属性注入
   @Inject(LoggerService)
   private logger!: LoggerService;
@@ -14,19 +14,10 @@ export class EditorHotkeys {
   }
 
   // 注册单个热键
-  @Hotkey('Control+S', {
-    preventDefault: false,
-  })
+  // @Hotkey('$mod', {
+  //   preventDefault: false,
+  // })
   handleSave(event: KeyboardEvent) {
-    console.log('🚀 ~ EditorHotkeys ~ handleSave ~ event:', event);
-  }
-
-  @Hotkey('Alt', {
-    preventDefault: true,
-    stopPropagation: true,
-  })
-  handleSave111(event: KeyboardEvent) {
-    // HotkeyManager.unregisterHotkeys(EditorHotkeys);
-    console.log('🚀 ~ EditorHotkeys ~ handleSave1 ~ event:', event);
+    console.log('🚀 ~ EditorHotkeys ~ handleSave ~ event:', 11111111);
   }
 }
